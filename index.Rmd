@@ -1,0 +1,22 @@
+---
+title: "Abortion Laws and Voter Turnout in the United States"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cerulean
+---
+
+Exploring how abortion laws and abortion facility access have impacted voter turnout over time in the United States
+
+Mohammad Fouda, Abigail Feinberg, Ellen Park, Supraja Teki, Matthew Untalan 
+
+## Background 
+[]
+
+## Overview 
+![]
+For a full in-depth description of our project visit our [project report](report.html) page. 
+
+## Collaborators
+

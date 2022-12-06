@@ -1,0 +1,21 @@
+name: "Abortion Laws and Voter Turnout"
+output_dir: "."
+navbar:
+  title: "Home"
+  left: 
+    - text: "Data"
+      href: data.html 
+    - text: "Report"
+      href: report.html
+    - text: "Analysis"
+      href: analysis.html    
+  right:
+    - icon: fa-github fa-lg
+      href: http://github.com/st3431/
+    - icon: fa-linkedin fa-lg 
+      href: https://www.linkedin.com/in/supraja-teki-70680b196/
+      
+output:
+  html_document:
+    theme: yeti
+  
