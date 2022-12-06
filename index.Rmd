@@ -7,20 +7,38 @@ output:
     
 ---
 
-Exploring how abortion laws and abortion facility access have impacted voter turnout over time in the United States
-
-Abby Feinberg, Mohammad Fouda, Ellen Park, Supraja Teki, Matthew Untalan 
+**Exploring how abortion laws and abortion facility access have impacted voter turnout over time in the United States** 
 
 
 <img src="images/home_page.jpg" style="width:75%">
 
 
 ## Background 
-[]
+
 
 ## Overview 
-![]
+
+**The website covers the following**:  
+
+Data: 
+
+- A description of each source we pulled our data from 
+- Explaining the variables we used and why we chose each variable 
+
+Analysis: 
+
+- 
+
+Mapping: 
+
+- A map of the U.S. detailing abortion laws by state  
+
 For a full in-depth description of our project visit our [project report](report.html) page. 
 
 ## Collaborators
 
+- Abby Feinberg (asf2164)
+- Mohammad Fouda (mff2137)
+- Ellen Park (ep3045)
+- Supraja Teki (st3431)
+- Matthew Untalan (mmu2108)

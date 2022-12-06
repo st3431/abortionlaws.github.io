@@ -1,28 +1,9 @@
 ---
-title: "Final Report"
+title: "Mapping"
 output: 
   html_document:
     toc: true
     toc_float: true
    
 ---
-
-
-## Motivation  
-
-The motivation behind this project comes from the consistent political discourse around abortion laws. Abortion laws in the United States has a long history of being politicized, often being brought up as a leading point in Women's Rights advocacy. When Roe v Wade, one of the most important and groundbreaking laws to ever be enacted regarding abortion, was overturned this created an uproar. 
-
-## Initial Questions 
-
-
-## Collaborators
-
-
-## Data Sources/Cleaning Methods
-
-
-## Exploratory Analysis 
-
-
-## Discussion
 
