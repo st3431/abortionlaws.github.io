@@ -4,12 +4,16 @@ output:
   html_document:
     toc: true
     toc_float: true
-    theme: cerulean
+    
 ---
 
 Exploring how abortion laws and abortion facility access have impacted voter turnout over time in the United States
 
-Mohammad Fouda, Abigail Feinberg, Ellen Park, Supraja Teki, Matthew Untalan 
+Abby Feinberg, Mohammad Fouda, Ellen Park, Supraja Teki, Matthew Untalan 
+
+
+<img src="images/home_page.jpg" style="width:75%">
+
 
 ## Background 
 []
