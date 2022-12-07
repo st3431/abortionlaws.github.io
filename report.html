@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -228,6 +229,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -331,16 +335,25 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="data.html">Data</a>
+  <a href="data.html">Data Sources</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analysis.html">Statistical Analysis</a>
+    </li>
+    <li>
+      <a href="mapping.html">Visualizations</a>
+    </li>
+  </ul>
 </li>
 <li>
-  <a href="analysis.html">Analysis</a>
-</li>
-<li>
-  <a href="mapping.html">Mapping</a>
-</li>
-<li>
-  <a href="report.html">Report</a>
+  <a href="report.html">Project Report</a>
 </li>
 <li>
   <a href="https://github.com/st3431/abortionlaws.github.io">
@@ -354,6 +367,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -378,9 +399,27 @@ address.</p>
 </div>
 <div id="initial-questions" class="section level2">
 <h2>Initial Questions</h2>
+<p>Based on the available data we were interested in answering the
+following questions:</p>
+<ul>
+<li>How has voter turnout changed by state between 2018 and 2022?</li>
+<li>Since the overturn of Roe v Wade how has accessibility to abortion
+clinics changed between June 2022 and July 2022?</li>
+<li>How do abortion laws and restrictions differ among each state?</li>
+</ul>
 </div>
-<div id="data-sourcescleaning-methods" class="section level2">
-<h2>Data Sources/Cleaning Methods</h2>
+<div id="data-processing-and-cleaning" class="section level2">
+<h2>Data Processing and Cleaning</h2>
+<p><em>Cleaning Each Data Set</em></p>
+<ol style="list-style-type: decimal">
+<li><p>Abortion Clinic Distances By County and State <a
+href="https://osf.io/pfxq3/">dataset</a></p></li>
+<li><p>Abortion Laws By State <a
+href="https://lawatlas.org/datasets/abortion-bans">dataset</a></p></li>
+<li><p>Voter Turnout By State <a
+href="https://www.electproject.org/2022g">dataset</a></p></li>
+</ol>
+<p><em>Merging the Data Sets</em></p>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory Analysis</h2>
@@ -424,6 +463,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

@@ -1,5 +1,5 @@
 ---
-title: "Analysis and Findings"
+title: "Statistical Analysis"
 output: 
   html_document:
     toc: true

@@ -15,6 +15,7 @@ output:
 
 ## Background 
 
+On June 24, 2022 the U.S. Supreme Court overturned the constitutional right to abortion by reversing Roe v Wade. With a historic piece of legislation being overruled, abortion laws changed, allowing states to now outright ban abortion. The midterm election in 2022 was the first election to occur since this overturn. This website focuses on the change in abortion laws since the overturn as well as the influence this change in legislation has had on voter turnout rates. 
 
 ## Overview 
 
@@ -22,16 +23,16 @@ output:
 
 Data: 
 
-- A description of each source we pulled our data from 
-- Explaining the variables we used and why we chose each variable 
+- A description of each data source
+
 
 Analysis: 
 
-- 
-
-Mapping: 
-
-- A map of the U.S. detailing abortion laws by state  
+- Statistical analyses run on abortion bans, accessibility and voter turnout 
+- Visualizations which include the following:  
+    - A map of the U.S. outlining abortion laws and restrictions by state 
+    - Voter turnout change from the 2018 elections 
+    - Voter eligibility rates in 2018 vs 2022 
 
 For a full in-depth description of our project visit our [project report](report.html) page. 
 

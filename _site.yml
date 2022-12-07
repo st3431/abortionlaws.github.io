@@ -3,13 +3,15 @@ output_dir: "."
 navbar:
   title: "Home"
   right: 
-    - text: "Data"
+    - text: "Data Sources"
       href: data.html 
     - text: "Analysis"
-      href: analysis.html
-    - text: "Mapping"
-      href: mapping.html
-    - text: "Report"
+      menu: 
+      - text: "Statistical Analysis"
+        href: analysis.html
+      - text: "Visualizations"
+        href: mapping.html
+    - text: "Project Report"
       href: report.html
     - icon: fa-github fa-lg
       href: https://github.com/st3431/abortionlaws.github.io

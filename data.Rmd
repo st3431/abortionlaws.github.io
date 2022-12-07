@@ -7,9 +7,14 @@ output:
    
 ---
 
+## Source 1: Abortion Clinic Distances 
 
-## Source 1 
+Since the overturn of Roe v Wade we believed it would be useful to identify how distances to the nearest abortion provider within each state changed between the overturn in June to July 2022. This data was provided by the [Myers Abortion Facility Database](https://osf.io/pfxq3/) and is public information published on the Open Science Framework website. The database uses public data to as an estimate of travel time and distance for an individual to reach an abortion resource, whether this is a private physician, hospital or a clinic. The distances are calculated at a county level for each month. This information was collected by Caitlin Myers and has information from 2009 to October 1st, 2022.  
 
-## Source 2
+## Source 2: Abortion Laws by State 
 
-## Source 3 
+We are also interested in the abortion laws and restrictions placed in each state. This data comes from [Temple University's Policy Surveillance Program](https://lawatlas.org/datasets/abortion-bans). The data set looks at abortion regulations starting from December 1, 2018 through October 1, 2021. In addition to abortion laws this source also includes laws defining restrictions on abortions such as state cases which prohibit abortion after specific gestational limits or number of weeks post-fertilization.   
+
+## Source 3: Voter Turnout Data 
+
+The voter turnout data was pulled from the [US Elections Project](https://www.electproject.org/2022g). This source was created by a Professor in the Department of Political Science at the University of Florida. 

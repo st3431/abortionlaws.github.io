@@ -1,5 +1,5 @@
 ---
-title: "Mapping"
+title: "Visualizations"
 output: 
   html_document:
     toc: true
