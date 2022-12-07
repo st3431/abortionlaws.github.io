@@ -369,7 +369,7 @@ pre code {
 
 
 <pre class="r"><code>clinicdist =
-  read_csv(&quot;rawdata/2022.10.01_abortionaccess_countyxmonth.csv&quot;)</code></pre>
+  read_csv(&quot;data/2022.10.01_abortionaccess_countyxmonth.csv&quot;)</code></pre>
 <pre><code>## Rows: 524714 Columns: 17
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -402,7 +402,9 @@ statedist_Jul =
 
 statedist = 
   merge(statedist_Jun, statedist_Jul, by = c(&quot;origin_state&quot;)) %&gt;%
-  merge(statedist_change, by = c(&quot;origin_state&quot;))</code></pre>
+  merge(statedist_change, by = c(&quot;origin_state&quot;))
+
+write.csv(statedist,&quot;data/statedist_final.csv&quot;, row.names = FALSE)</code></pre>
 
 
 
