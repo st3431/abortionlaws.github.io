@@ -94,6 +94,10 @@ write_csv(abortion_bans, "data_cleaned/abortion_bans_final.csv")
 The voter turnout data was pulled from [US Elections Project](https://www.electproject.org/2022g). This source was created by a Professor in the Department of Political Science at the University of Florida.  
 
 ```{r}
+library(tidyverse)
+library(tidyr)
+library(readxl)
+
 voting2022_df =
   read_xlsx("datasets/2022 November General Election.xlsx", sheet = "Turnout Rates", range = "A2:N54") %>%
   janitor::clean_names() %>% 
