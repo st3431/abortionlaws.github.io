@@ -9,11 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Ellen Park" />
 
-<meta name="date" content="2022-12-08" />
+<meta name="date" content="2022-11-29" />
 
-<title>visualizations</title>
+<title>voting data cleaning</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -292,120 +291,42 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">visualizations</h1>
-<h4 class="author">Ellen Park</h4>
-<h4 class="date">2022-12-08</h4>
+<h1 class="title toc-ignore">voting data cleaning</h1>
+<h4 class="date">2022-11-29</h4>
 
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   0.3.4 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.0      ✔ stringr 1.4.1 
-## ✔ readr   2.1.2      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(tidyr)
-abortionbans_df = 
-  read.csv(&quot;Data/abortion_bans_final.csv&quot;) %&gt;% 
-  janitor::clean_names() 
-votingturnout_df = 
-  read.csv(&quot;Voting Turnout - Final.csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  filter(!row_number() %in% c(1))
-statedist_df = 
-  read.csv(&quot;datasets/statedist_final.csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  rename(state_abv = origin_state)
-abortionvoting_df =
-  full_join(abortionbans_df, votingturnout_df, by = &quot;state_abv&quot;) %&gt;% 
-  select(-state.y) %&gt;% 
-  rename(state = state.x)
-abortionvoting_df =
-  full_join(abortionvoting_df, statedist_df, by = &quot;state_abv&quot;) %&gt;% 
-  rename(clinicdistance_jun = jun, clinicdistance_jul = jul)
-  
-write.csv(abortionvoting_df,&quot;Data/finalprojectfinaldataset.csv&quot;, row.names = FALSE)</code></pre>
+<p>Cleaning both the Voting 2022 dataset and the Voting 2018
+dataset:</p>
 <pre class="r"><code>library(tidyverse)
-library(ggplot2)
-library(knitr)
-library(lubridate)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;lubridate&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     date, intersect, setdiff, union</code></pre>
-<pre class="r"><code>library(ggpubr)</code></pre>
-<pre class="r"><code>theme_set(theme_minimal() + theme(legend.position = &quot;bottom&quot;))
-options(
-  ggplot2.continuous.colour = &quot;viridis&quot;,
-  ggplot2.continuous.fill = &quot;viridis&quot;
-)
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d</code></pre>
-<pre class="r"><code>abortionvoting_df %&gt;%
-  drop_na() %&gt;%
-  ggplot(aes(x = state_abv)) +
-    geom_point(aes(y = turnout_rate2018, colour = &quot;2018&quot;)) +
-    geom_point(aes(y = turnout_rate2022, colour = &quot;2022&quot;)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(
-    title = &quot;Voting Turnout Rate in 2018 vs 2022&quot;,
-    x = &quot;State&quot;,
-    y = &quot;Rate Difference&quot;,
-    caption = &quot;Figure 1. Voting Turnout Rate in 2018 and 2022.&quot;)</code></pre>
-<p><img src="visualizations-copy_files/figure-html/figure%201-1.png" width="672" /></p>
-<pre class="r"><code>abortionvoting_df %&gt;%
-  drop_na() %&gt;%
-  ggplot(aes(x = state_abv)) +
-    geom_point(aes(y = turnout_estimate2018, colour = &quot;2018&quot;)) +
-    geom_point(aes(y = turnout_estimate2022, colour = &quot;2022&quot;)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(
-    title = &quot;Turnout Estimate Number in 2018 vs 2022&quot;,
-    x = &quot;State&quot;,
-    y = &quot;Rate Difference&quot;,
-    caption = &quot;Figure 2. Turnout Estimate Number in 2018 and 2022.&quot;)</code></pre>
-<p><img src="visualizations-copy_files/figure-html/figure%202-1.png" width="672" /></p>
-<pre class="r"><code>abortionvoting_df %&gt;%
-  drop_na() %&gt;%
-  ggplot(aes(x = state_abv)) +
-    geom_point(aes(y = voting_eligible_pop2018, colour = &quot;2018&quot;)) +
-    geom_point(aes(y = voting_eligible_pop2022, colour = &quot;2022&quot;)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(
-    title = &quot;Voting Eligibility Population in 2018 vs 2022&quot;,
-    x = &quot;State&quot;,
-    y = &quot;Difference&quot;,
-    caption = &quot;Figure 3. Voting Eligibility Population in 2018 and 2022.&quot;)</code></pre>
-<p><img src="visualizations-copy_files/figure-html/figure%203-1.png" width="672" /></p>
-<pre class="r"><code>abortionvoting_df %&gt;%
-  drop_na() %&gt;%
-  ggplot(aes(x = state_abv)) +
-    geom_point(aes(y = voting_age_pop2018, colour = &quot;2018&quot;)) +
-    geom_point(aes(y = voting_age_pop2022, colour = &quot;2022&quot;)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(
-    title = &quot;Voting Age Population in 2018 vs 2022&quot;,
-    x = &quot;State&quot;,
-    y = &quot;Difference&quot;,
-    caption = &quot;Figure 4. Voting Age Population in 2018 and 2022.&quot;)</code></pre>
-<p><img src="visualizations-copy_files/figure-html/figure%204-1.png" width="672" /></p>
-<pre class="r"><code>abortionvoting_df %&gt;%
-  drop_na() %&gt;%
-  ggplot(aes(x = state_abv)) +
-  geom_point(aes(y = clinicdistance_jun, colour = &quot;June&quot;)) +
-  geom_point(aes(y = clinicdistance_jul, colour = &quot;July&quot;)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(
-    title = &quot;Distance Changed from June to July, 2022&quot;,
-    x = &quot;State&quot;,
-    y = &quot;Distance&quot;,
-    caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
-<p><img src="visualizations-copy_files/figure-html/figure%205-1.png" width="672" /></p>
+library(tidyr)
+library(readxl)
+
+voting2022_df =
+  read_xlsx(&quot;Data/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
+  janitor::clean_names() %&gt;% 
+  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...1`</code></pre>
+<pre class="r"><code>voting2018_df = 
+    read_xlsx(&quot;Data/2018 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:P54&quot;) %&gt;%
+  janitor::clean_names() %&gt;%  
+  rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...1`</code></pre>
+<p>Merging the datasets:</p>
+<pre class="r"><code>voting_df = 
+  full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
+  select(-state.x) %&gt;% 
+  mutate(turnout_estimate_difference = turnout_estimate2022 - turnout_estimate2018, turnout_Rate_difference = turnoutRate2022 - turnoutRate2018, voting_eligible_difference = voting_eligible_pop2022 - voting_eligible_pop2018, voting_age_difference = voting_age_pop2022 - voting_age_pop2018) %&gt;% 
+  rename(state = state.y)
+
+voting_df &lt;- voting_df[, c(6, 5, 1, 7, 11, 2, 8, 12, 3, 9, 13, 4, 10, 14)]
+
+write.csv(voting_df,&quot;Data/Voting Turnout - Final.csv&quot;, row.names = FALSE)</code></pre>
 
 
 
