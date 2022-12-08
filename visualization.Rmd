@@ -12,14 +12,14 @@ output:
 library(tidyverse)
 library(tidyr)
 abortionbans_df = 
-  read.csv("Data/abortion_bans_final.csv") %>% 
+  read.csv("data_cleaned/abortion_bans_final.csv") %>% 
   janitor::clean_names() 
 votingturnout_df = 
-  read.csv("Voting Turnout - Final.csv") %>% 
+  read.csv("data_cleaned/Voting Turnout - Final.csv") %>% 
   janitor::clean_names() %>% 
   filter(!row_number() %in% c(1))
 statedist_df = 
-  read.csv("Data/statedist_final.csv") %>% 
+  read.csv("data_cleaned/statedist_final.csv") %>% 
   janitor::clean_names() %>% 
   rename(state_abv = origin_state)
 abortionvoting_df =
@@ -30,7 +30,7 @@ abortionvoting_df =
   full_join(abortionvoting_df, statedist_df, by = "state_abv") %>% 
   rename(clinicdistance_jun = jun, clinicdistance_jul = jul)
   
-write.csv(abortionvoting_df,"Data/finalprojectfinaldataset.csv", row.names = FALSE)
+write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.names = FALSE)
 ```
 
 
@@ -52,6 +52,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
+## **Voting Turnout and Eligibility Graphs**
 
 ```{r figure 1}
 abortionvoting_df %>%
@@ -66,6 +67,7 @@ abortionvoting_df %>%
     y = "Rate Difference",
     caption = "Figure 1. Voting Turnout Rate in 2018 and 2022.")
 ```
+
 
 ```{r figure 2}
 abortionvoting_df %>%
@@ -111,6 +113,8 @@ abortionvoting_df %>%
     caption = "Figure 4. Voting Age Population in 2018 and 2022.")
 ```
 
+## **Abortion Laws and Accessibility Graphs** 
+
 ```{r figure 5}
 abortionvoting_df %>%
   drop_na() %>%
@@ -125,8 +129,6 @@ abortionvoting_df %>%
     caption = "Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.")
 ```
 
-
-## Abortion Laws in the U.S. 2022
 
 <img src="images/abortion_status.jpg" style="width:75%">
 

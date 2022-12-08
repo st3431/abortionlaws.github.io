@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Matt Untalan" />
 
-<meta name="date" content="2022-11-29" />
 
-<title>voting data cleaning</title>
+<title>Distance to Clinic by State</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -291,42 +291,49 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">voting data cleaning</h1>
-<h4 class="date">2022-11-29</h4>
+<h1 class="title toc-ignore">Distance to Clinic by State</h1>
+<h4 class="author">Matt Untalan</h4>
 
 </div>
 
 
-<p>Cleaning both the Voting 2022 dataset and the Voting 2018
-dataset:</p>
-<pre class="r"><code>library(tidyverse)
-library(tidyr)
-library(readxl)
+<pre class="r"><code>clinicdist =
+  read_csv(&quot;datasets/2022.10.01_abortionaccess_countyxmonth.csv&quot;)</code></pre>
+<pre><code>## Rows: 524714 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (10): origin_fips_code, origin_county_name, origin_state, dest_fips_code...
+## dbl  (7): origin_population, monthlydate, year, month, distance_origintodest...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>countydist_change = 
+  subset(clinicdist, year == 2022 &amp; (month == 6 | month == 7)) %&gt;%
+  select(origin_county_name, origin_state, year, month, distance_origintodest) %&gt;%
+  mutate(
+    month = month.abb[month]
+  ) %&gt;%
+  pivot_wider(
+    names_from = &quot;month&quot;, 
+    values_from = &quot;distance_origintodest&quot;) %&gt;%
+  mutate(
+     dist_change = Jul - Jun
+  )
 
-voting2022_df =
-  read_xlsx(&quot;datasets/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
-  janitor::clean_names() %&gt;% 
-  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %&gt;% 
-  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)</code></pre>
-<pre><code>## New names:
-## • `` -&gt; `...1`</code></pre>
-<pre class="r"><code>voting2018_df = 
-    read_xlsx(&quot;datasets/2018 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:P54&quot;) %&gt;%
-  janitor::clean_names() %&gt;%  
-  rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
-  select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
-<pre><code>## New names:
-## • `` -&gt; `...1`</code></pre>
-<p>Merging the datasets:</p>
-<pre class="r"><code>voting_df = 
-  full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
-  select(-state.x) %&gt;% 
-  mutate(turnout_estimate_difference = turnout_estimate2022 - turnout_estimate2018, turnout_Rate_difference = turnoutRate2022 - turnoutRate2018, voting_eligible_difference = voting_eligible_pop2022 - voting_eligible_pop2018, voting_age_difference = voting_age_pop2022 - voting_age_pop2018) %&gt;% 
-  rename(state = state.y)
+statedist_change = 
+  aggregate(dist_change ~ origin_state, countydist_change, mean)
 
-voting_df &lt;- voting_df[, c(6, 5, 1, 7, 11, 2, 8, 12, 3, 9, 13, 4, 10, 14)]
+statedist_Jun =
+  aggregate(Jun ~ origin_state, countydist_change, mean)
 
-write.csv(voting_df,&quot;data_cleaned/Voting Turnout - Final.csv&quot;, row.names = FALSE)</code></pre>
+statedist_Jul =
+  aggregate(Jul ~ origin_state, countydist_change, mean)
+
+statedist = 
+  merge(statedist_Jun, statedist_Jul, by = c(&quot;origin_state&quot;)) %&gt;%
+  merge(statedist_change, by = c(&quot;origin_state&quot;))
+
+write.csv(statedist,&quot;data_cleaned/statedist_final.csv&quot;, row.names = FALSE)</code></pre>
 
 
 

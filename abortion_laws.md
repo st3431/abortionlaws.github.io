@@ -17,7 +17,7 @@ renamed to District of Columbia.
 
 ``` r
 bans2018 <-
-  read_excel("data/abortion_bans_data_Oct 2021.xlsx", sheet = "Statistical Data", range = "A1:H127") %>% 
+  read_excel("datasets/abortion_bans_data_Oct 2021.xlsx", sheet = "Statistical Data", range = "A1:H127") %>% 
   janitor::clean_names() %>% 
   rename(
     state = jurisdiction,
@@ -112,7 +112,7 @@ abortion_bans <-
     names_from = year,
     values_from = abstatus) %>% 
   rename(abstatus18 = '2018', abstatus22 = '2022') %>% 
-  write_csv("data/abortion_bans_final.csv")
+  write_csv("data_cleaned/abortion_bans_final.csv")
 ```
 
     ## Joining, by = c("state", "state_abv", "year", "abstatus")

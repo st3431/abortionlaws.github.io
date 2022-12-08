@@ -7,16 +7,16 @@ library(tidyverse)
 library(tidyr)
 
 abortionbans_df = 
-  read.csv("Data/abortion_bans_final.csv") %>% 
+  read.csv("data_cleaned/abortion_bans_final.csv") %>% 
   janitor::clean_names() 
 
 votingturnout_df = 
-  read.csv("Voting Turnout - Final.csv") %>% 
+  read.csv("data_cleaned/Voting Turnout - Final.csv") %>% 
   janitor::clean_names() %>% 
   filter(!row_number() %in% c(1))
 
 statedist_df = 
-  read.csv("Data/statedist_final.csv") %>% 
+  read.csv("data_cleaned/statedist_final.csv") %>% 
   janitor::clean_names() %>% 
   rename(state_abv = origin_state)
 
@@ -30,5 +30,5 @@ abortionvoting_df =
   full_join(abortionvoting_df, statedist_df, by = "state_abv") %>% 
   rename(clinicdistance_jun = jun, clinicdistance_jul = jul)
   
-write.csv(abortionvoting_df,"Data/finalprojectfinaldataset.csv", row.names = FALSE)
+write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.names = FALSE)
 ```

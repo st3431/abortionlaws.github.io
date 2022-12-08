@@ -348,7 +348,7 @@ div.tocify {
       <a href="analysis.html">Statistical Analysis</a>
     </li>
     <li>
-      <a href="mapping.html">Visualizations</a>
+      <a href="visualization.html">Visualizations</a>
     </li>
   </ul>
 </li>
@@ -383,6 +383,8 @@ div.tocify {
 </div>
 
 
+<div id="voting-turnout-and-eligibility-graphs" class="section level2">
+<h2><strong>Voting Turnout and Eligibility Graphs</strong></h2>
 <pre class="r"><code>abortionvoting_df %&gt;%
   drop_na() %&gt;%
   ggplot(aes(x = state_abv)) +
@@ -431,6 +433,9 @@ div.tocify {
     y = &quot;Difference&quot;,
     caption = &quot;Figure 4. Voting Age Population in 2018 and 2022.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%204-1.png" width="672" /></p>
+</div>
+<div id="abortion-laws-and-accessibility-graphs" class="section level2">
+<h2><strong>Abortion Laws and Accessibility Graphs</strong></h2>
 <pre class="r"><code>abortionvoting_df %&gt;%
   drop_na() %&gt;%
   ggplot(aes(x = state_abv)) +
@@ -443,8 +448,6 @@ div.tocify {
     y = &quot;Distance&quot;,
     caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%205-1.png" width="672" /></p>
-<div id="abortion-laws-in-the-u.s.-2022" class="section level2">
-<h2>Abortion Laws in the U.S. 2022</h2>
 <p><img src="images/abortion_status.JPG" style="width:75%"></p>
 </div>
 
