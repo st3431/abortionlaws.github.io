@@ -1,15 +1,12 @@
 ---
-title: "Visualizations"
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    code_folding: hide
-   
+title: "visualizations"
+author: "Ellen Park"
+date: "2022-12-08"
+output: html_document
 ---
 
-```{r, echo = FALSE, message= FALSE}
-library(tidyverse)
+```{r merge document}
+library(tidyverse) 
 library(tidyr)
 abortionbans_df = 
   read.csv("Data/abortion_bans_final.csv") %>% 
@@ -19,7 +16,7 @@ votingturnout_df =
   janitor::clean_names() %>% 
   filter(!row_number() %in% c(1))
 statedist_df = 
-  read.csv("Data/statedist_final.csv") %>% 
+  read.csv("clinicdist_data_final/statedist_final.csv") %>% 
   janitor::clean_names() %>% 
   rename(state_abv = origin_state)
 abortionvoting_df =
@@ -33,8 +30,7 @@ abortionvoting_df =
 write.csv(abortionvoting_df,"Data/finalprojectfinaldataset.csv", row.names = FALSE)
 ```
 
-
-```{r, echo = FALSE, message= FALSE}
+```{r}
 library(tidyverse)
 library(ggplot2)
 library(knitr)
@@ -42,7 +38,8 @@ library(lubridate)
 library(ggpubr)
 ```
 
-```{r, echo = FALSE}
+
+```{r}
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
@@ -81,7 +78,6 @@ abortionvoting_df %>%
     caption = "Figure 2. Turnout Estimate Number in 2018 and 2022.")
 ```
 
-
 ```{r figure 3}
 abortionvoting_df %>%
   drop_na() %>%
@@ -94,9 +90,8 @@ abortionvoting_df %>%
     x = "State",
     y = "Difference",
     caption = "Figure 3. Voting Eligibility Population in 2018 and 2022.")
+
 ```
-
-
 ```{r figure 4}
 abortionvoting_df %>%
   drop_na() %>%
@@ -109,6 +104,7 @@ abortionvoting_df %>%
     x = "State",
     y = "Difference",
     caption = "Figure 4. Voting Age Population in 2018 and 2022.")
+
 ```
 
 ```{r figure 5}
@@ -123,10 +119,5 @@ abortionvoting_df %>%
     x = "State",
     y = "Distance",
     caption = "Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.")
+
 ```
-
-
-## Abortion Laws in the U.S. 2022
-
-<img src="images/abortion_status.jpg" style="width:75%">
-

@@ -13,6 +13,8 @@ output:
 <img src="images/home_page.jpg" style="width:75%">
 
 
+
+
 ## Background 
 
 On June 24, 2022 the U.S. Supreme Court overturned the constitutional right to abortion by reversing Roe v Wade. With a historic piece of legislation being overruled, abortion laws changed, allowing states to now outright ban abortion. The midterm election in 2022 was the first election to occur since this overturn. This website focuses on the change in abortion laws since the overturn as well as the influence this change in legislation has had on voter turnout rates. 
@@ -43,3 +45,8 @@ For a full in-depth description of our project visit our [project report](report
 - Ellen Park (ep3045)
 - Supraja Teki (st3431)
 - Matthew Untalan (mmu2108)
+
+
+
+
+
