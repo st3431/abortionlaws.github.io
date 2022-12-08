@@ -586,8 +586,24 @@ and clinic abortion distances.</p>
 <div id="voter-turnout-by-state-dataset" class="section level3">
 <h3>Voter Turnout By State: <a
 href="https://www.electproject.org/2022g">dataset</a></h3>
-<p>Cleaning both the Voting 2022 dataset and the Voting 2018
-dataset:</p>
+<p>The 2022 Voter Turnout dataset was pulled from <a
+href="https://www.electproject.org/2022g">US Elections Project</a>. The
+data was downloaded as an xlsx file and read into R with a range
+restriction because the dataset had notes clarifying the data that were
+not useful to import into R. The names of variables of interest were
+renamed to <code>State</code>, <code>turnout_estimate2022</code>,
+<code>turnoutrate2022</code>, <code>voting_eligible_pop2022</code>, and
+<code>voting_age_pop2022</code> because the original names in the
+dataset had been confusing. Those four variables plus
+<code>state_abv</code> was selected out of the dataset. The other
+variables in the dataset involved data on the percent of people who were
+eligible to vote based on age, but were ineligible because of other
+factors which were not of interest to us so they were not kept in our
+final dataset.</p>
+<p>The 2022 Voter Turnout dataset was pulled from <a
+href="https://www.electproject.org/2018g">US Elections Project</a>. This
+dataset was similar to the 2022 Vote Turnout dataset so an identical
+cleaning process was conducted.</p>
 <pre class="r"><code>library(tidyverse)
 library(tidyr)
 library(readxl)
@@ -603,7 +619,17 @@ voting2018_df =
   janitor::clean_names() %&gt;%  
   rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
   select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
-<p>Merging the voting datasets:</p>
+<p>The two datasets were then merged by the <code>state_abv</code>
+variable. New variables were created that were the difference in values
+between 2022 and 2018 so that we could see how values changed between
+the two elections. These variables are
+<code>turnout_estimate_difference</code>,
+<code>turnout_Rate_difference</code>,
+<code>voting_eligible_difference</code>, and
+<code>voting_age_difference</code>. In the merge, there ended up being
+two State variables: <code>state.x</code> and <code>state.y</code>. One
+of the variables were removed and the other one was renamed to
+<code>state</code>.</p>
 <pre class="r"><code>voting_df = 
   full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
   select(-state.x) %&gt;% 
@@ -616,6 +642,25 @@ write.csv(voting_df,&quot;data_cleaned/Voting Turnout - Final.csv&quot;, row.nam
 </div>
 <div id="merging-the-three-datasets" class="section level3">
 <h3><strong>Merging the Three Datasets</strong></h3>
+<p>The final three datasets were merged into one large datasets to
+prepare it for analysis. The Abortion Bans dataset was imported into R
+from the .csv file. The Voting Turnout datastet was imported into R from
+the .csv file and the United States row was removed because none of the
+other datasets had an equivalent row. The Distance to an Abortion Clinic
+dataset was imported and the <code>origin_state</code> variable was
+renamed to <code>state_abv</code> to match the other two datasets since
+this was the variable that would be used to join the three datasets.</p>
+<p>The Abortion Bans and Voting Turnout datasets were merged first by
+the <code>state_abv</code> variable that existed in both datasets. In
+the merge, there ended up being two State variables:
+<code>state.x</code> and <code>state.y</code>. One of the variables were
+removed and the other one was renamed to <code>state</code>. This
+combined dataset was then combined with the Distance to an Aborion
+Clinic dataset by the <code>state_abv</code> variable that existed in
+both datasets. The <code>jun</code> variable was renamed to
+<code>clinicdistance_jun</code> and the <code>jul</code> variable was
+renamed to <code>clinicdistance_jul</code> to clarify what these
+variables were.</p>
 <pre class="r"><code>library(tidyverse) 
 library(tidyr)
 
@@ -708,9 +753,9 @@ write.csv(abortionvoting_df,&quot;data_cleaned/finalprojectfinaldataset.csv&quot
   geom_point(aes(y = clinicdistance_jul, colour = &quot;July&quot;)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(
-    title = &quot;Distance Changed from June to July, 2022&quot;,
+    title = &quot;Distance to an Abortion Provider from June to July, 2022&quot;,
     x = &quot;State&quot;,
-    y = &quot;Distance&quot;,
+    y = &quot;Distance (Miles)&quot;,
     caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
 <p><img src="report_files/figure-html/figure%205-1.png" width="90%" /></p>
 <p><img src="images/abortion_status.JPG" style="width:75%"></p>

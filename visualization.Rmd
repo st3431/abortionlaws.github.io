@@ -129,9 +129,9 @@ abortionvoting_df %>%
   geom_point(aes(y = clinicdistance_jul, colour = "July")) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(
-    title = "Distance Changed from June to July, 2022",
+    title = "Distance to An Abortion Provider from June to July, 2022",
     x = "State",
-    y = "Distance",
+    y = "Distance (Miles)",
     caption = "Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.")
 ```
 
