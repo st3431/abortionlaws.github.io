@@ -13,7 +13,7 @@
 
 <title>Data Sources</title>
 
-<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,9 +193,16 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
+  content: "&#xe258;";
   border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -406,11 +413,15 @@ to October 1st, 2022.</p>
 in each state. This data comes from <a
 href="https://lawatlas.org/datasets/abortion-bans">Temple University’s
 Policy Surveillance Program</a>. The data set looks at abortion
-regulations starting from December 1, 2018 through October 1, 2021. In
-addition to abortion laws this source also includes laws defining
-restrictions on abortions such as state cases which prohibit abortion
-after specific gestational limits or number of weeks
-post-fertilization.</p>
+regulations starting from December 1, 2018 through October 1, 2021. We
+are also using data on abortion laws restriction status by state after
+Roe v. Wade was overturned. This data that include updates through
+November 2022 comes from the non-profit Lucy Burns Institute <a
+href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
+The data set was not available to download so we scraped it. In addition
+to abortion laws this source also includes laws defining restrictions on
+abortions such as state cases which prohibit abortion after specific
+gestational limits or number of weeks post-fertilization.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
@@ -423,13 +434,10 @@ post-fertilization.</p>
     year = lubridate::year(effective_date),
     abstatus = replace(abstatus, abstatus == &quot;.&quot;, &quot;0&quot;)) %&gt;% 
     select(state, state_abv, year, abstatus) %&gt;% 
-  filter(year == 2018)</code></pre>
-<p>We are also using data on abortion laws restriction status by state
-in 2022 after Roe v. Wade was overturned. This data comes from the
-nonproft Lucy Burns Institute <a
-href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
-The dataset set was not available to download so we scraped it.</p>
-<pre class="r"><code>bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
+  filter(year == 2018)
+
+
+bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
 bans_page &lt;- read_html(bans_link)
 
 bans2022 &lt;- 
@@ -450,9 +458,17 @@ bans2022 &lt;-
   slice(-1) %&gt;% 
   head(51) %&gt;% 
   arrange(state) </code></pre>
-<p>We then merged both 2018 and 2022 datasets after harmonizing the
-variable names. The resulting dataset was saved as a CSV file for later
-use in further data processing.</p>
+<p>We then merged both 2018 and 2022 data sets after harmonizing the
+variable names. The resulting data set was saved as a CSV file for later
+use in further data processing. The new data set include 4 variables,
+some of which are listed below:</p>
+<ul>
+<li><code>state</code>: State name</li>
+<li><code>abstatus18</code>: Abortion restriction status in 2018 ( 1 =
+restricted, 0 = not restricted)</li>
+<li><code>abstatus22</code>: Abortion restriction status in 2022 ( 1 =
+restricted, 0 = not restricted)</li>
+</ul>
 <pre class="r"><code>abortion_bans &lt;-
   full_join(bans2018, bans2022)%&gt;% 
   arrange(state, year) %&gt;% 
@@ -469,6 +485,34 @@ write_csv(abortion_bans, &quot;data_cleaned/abortion_bans_final.csv&quot;)</code
 href="https://www.electproject.org/2022g">US Elections Project</a>. This
 source was created by a Professor in the Department of Political Science
 at the University of Florida.</p>
+<pre class="r"><code>voting2022_df =
+  read_xlsx(&quot;datasets/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
+  janitor::clean_names() %&gt;% 
+  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)
+
+voting2018_df = 
+    read_xlsx(&quot;datasets/2018 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:P54&quot;) %&gt;%
+  janitor::clean_names() %&gt;%  
+  rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
+<p>The 2018 and 2022 datasets included TurnoutRate, which is the percent
+voter turnout in each state based on the number of people that are
+eligible to vote within that state. The other relevant variables that
+were kept were the turnout_estimate (the number of people who voted),
+voting_eligible_pop (the number of people who are eligible to vote), and
+voting_age_pop (the number of people old enough to vote). The two
+datasets were merged and difference variables were created to show the
+difference in each of the variables between the two years.</p>
+<pre class="r"><code>voting_df = 
+  full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
+  select(-state.x) %&gt;% 
+  mutate(turnout_estimate_difference = turnout_estimate2022 - turnout_estimate2018, turnout_Rate_difference = turnoutRate2022 - turnoutRate2018, voting_eligible_difference = voting_eligible_pop2022 - voting_eligible_pop2018, voting_age_difference = voting_age_pop2022 - voting_age_pop2018) %&gt;% 
+  rename(state = state.y)
+
+voting_df &lt;- voting_df[, c(6, 5, 1, 7, 11, 2, 8, 12, 3, 9, 13, 4, 10, 14)]
+
+write.csv(voting_df,&quot;data_cleaned/Voting Turnout - Final.csv&quot;, row.names = FALSE)</code></pre>
 </div>
 
 

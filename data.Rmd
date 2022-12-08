@@ -30,7 +30,7 @@ Since the overturn of Roe v Wade we believed it would be useful to identify how 
 
 ## Source 2: Abortion Laws by State 
 
-We are also interested in the abortion laws and restrictions placed in each state. This data comes from [Temple University's Policy Surveillance Program](https://lawatlas.org/datasets/abortion-bans). The data set looks at abortion regulations starting from December 1, 2018 through October 1, 2021. In addition to abortion laws this source also includes laws defining restrictions on abortions such as state cases which prohibit abortion after specific gestational limits or number of weeks post-fertilization.   
+We are also interested in the abortion laws and restrictions placed in each state. This data comes from [Temple University's Policy Surveillance Program](https://lawatlas.org/datasets/abortion-bans). The data set looks at abortion regulations starting from December 1, 2018 through October 1, 2021. We are also using data on abortion laws restriction status by state after Roe v. Wade was overturned. This data that include updates through November 2022 comes from the non-profit Lucy Burns Institute [Ballotpedia](https://ballotpedia.org/Abortion_regulations_by_state). The data set was not available to download so we scraped it. In addition to abortion laws this source also includes laws defining restrictions on abortions such as state cases which prohibit abortion after specific gestational limits or number of weeks post-fertilization.   
 
 ```{r}
 bans2018 <-
@@ -46,11 +46,8 @@ bans2018 <-
     abstatus = replace(abstatus, abstatus == ".", "0")) %>% 
     select(state, state_abv, year, abstatus) %>% 
   filter(year == 2018)
-```
 
-We are also using data on abortion laws restriction status by state in 2022 after Roe v. Wade was overturned. This data comes from the nonproft Lucy Burns Institute [Ballotpedia](https://ballotpedia.org/Abortion_regulations_by_state). The dataset set was not available to download so we scraped it. 
 
-```{r}
 bans_link <- "https://ballotpedia.org/Abortion_regulations_by_state"
 bans_page <- read_html(bans_link)
 
@@ -74,7 +71,11 @@ bans2022 <-
   arrange(state) 
 ```
 
-We then merged both 2018 and 2022 datasets after harmonizing the variable names. The resulting dataset was saved as a CSV file for later use in further data processing. 
+We then merged both 2018 and 2022 data sets after harmonizing the variable names. The resulting data set was saved as a CSV file for later use in further data processing. The new data set include 4 variables, some of which are listed below:
+
+* `state`: State name
+* `abstatus18`: Abortion restriction status in 2018 ( 1 = restricted, 0 = not restricted)
+* `abstatus22`: Abortion restriction status in 2022 ( 1 = restricted, 0 = not restricted)
 
 ```{r}
 abortion_bans <-
@@ -93,10 +94,6 @@ write_csv(abortion_bans, "data_cleaned/abortion_bans_final.csv")
 The voter turnout data was pulled from [US Elections Project](https://www.electproject.org/2022g). This source was created by a Professor in the Department of Political Science at the University of Florida.  
 
 ```{r}
-library(tidyverse)
-library(tidyr)
-library(readxl)
-
 voting2022_df =
   read_xlsx("datasets/2022 November General Election.xlsx", sheet = "Turnout Rates", range = "A2:N54") %>%
   janitor::clean_names() %>% 
