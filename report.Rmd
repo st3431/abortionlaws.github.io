@@ -167,7 +167,9 @@ abortion_bans
 
 ### Voter Turnout By State:  [dataset](https://www.electproject.org/2022g)
 
-Cleaning both the Voting 2022 dataset and the Voting 2018 dataset: 
+The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2022g). The data was downloaded as an xlsx file and read into R with a range restriction because the dataset had notes clarifying the data that were not useful to import into R. The names of variables of interest were renamed to `State`, `turnout_estimate2022`, `turnoutrate2022`, `voting_eligible_pop2022`, and `voting_age_pop2022` because the original names in the dataset had been confusing. Those four variables plus `state_abv` was selected out of the dataset. The other variables in the dataset involved data on the percent of people who were eligible to vote based on age, but were ineligible because of other factors which were not of interest to us so they were not kept in our final dataset.   
+
+The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2018g). This dataset was similar to the 2022 Vote Turnout dataset so an identical cleaning process was conducted. 
 
 ```{r, message = FALSE}
 library(tidyverse)
@@ -188,7 +190,7 @@ voting2018_df =
 
 ```
 
-Merging the voting datasets: 
+The two datasets were then merged by the `state_abv` variable. New variables were created that were the difference in values between 2022 and 2018 so that we could see how values changed between the two elections. These variables are `turnout_estimate_difference`, `turnout_Rate_difference`, `voting_eligible_difference`, and `voting_age_difference`. In the merge, there ended up being two State variables: `state.x` and `state.y`. One of the variables were removed and the other one was renamed to `state`. 
 
 ```{r, message = FALSE}
 voting_df = 
@@ -205,6 +207,9 @@ write.csv(voting_df,"data_cleaned/Voting Turnout - Final.csv", row.names = FALSE
 
 ### **Merging the Three Datasets** 
 
+The final three datasets were merged into one large datasets to prepare it for analysis. The Abortion Bans dataset was imported into R from the .csv file. The Voting Turnout datastet was imported into R from the .csv file and the United States row was removed because none of the other datasets had an equivalent row. The Distance to an Abortion Clinic dataset was imported and the `origin_state` variable was renamed to `state_abv` to match the other two datasets since this was the variable that would be used to join the three datasets. 
+
+The Abortion Bans and Voting Turnout datasets were merged first by the `state_abv` variable that existed in both datasets. In the merge, there ended up being two State variables: `state.x` and `state.y`. One of the variables were removed and the other one was renamed to `state`. This combined dataset was then combined with the Distance to an Aborion Clinic dataset by the `state_abv` variable that existed in both datasets. The `jun` variable was renamed to `clinicdistance_jun` and the `jul` variable was renamed to `clinicdistance_jul` to clarify what these variables were. 
 
 ```{r, message = FALSE}
 
