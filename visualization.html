@@ -407,6 +407,11 @@ div.tocify {
     y = &quot;Rate Difference&quot;,
     caption = &quot;Figure 1. Voting Turnout Rate in 2018 and 2022.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%201-1.png" width="672" /></p>
+<p>Figure 1 shows the voting turnout rate for all 50 states in 2018 and
+2022. The data points for 2018 are purple, and the data points for 2022
+are yellow. From the figure, it can be determined that generally, the
+voting turnout rate in 2018 was higher than the voting turnout rate in
+2022.</p>
 <pre class="r"><code>abortionvoting_df %&gt;%
   drop_na() %&gt;%
   ggplot(aes(x = state_abv)) +
@@ -419,6 +424,13 @@ div.tocify {
     y = &quot;Rate Difference&quot;,
     caption = &quot;Figure 2. Turnout Estimate Number in 2018 and 2022.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%202-1.png" width="672" /></p>
+<p>Figure 2 shows the turnout estimate number in 2018 and 2022. The
+estimate number for 2018 is purple and the estimate number for 2022 is
+yellow. From this figure, it can be determined that the estimates for
+voting turnout in 2022 is lower than those from 2018. When comparing
+this figure with the actual turnout rate (Figure 1), we see that the
+actual voting turnout is generally lower than the estimated voting
+turnout.</p>
 <pre class="r"><code>abortionvoting_df %&gt;%
   drop_na() %&gt;%
   ggplot(aes(x = state_abv)) +
@@ -431,6 +443,14 @@ div.tocify {
     y = &quot;Difference&quot;,
     caption = &quot;Figure 3. Voting Eligibility Population in 2018 and 2022.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%203-1.png" width="672" /></p>
+<p>Figure 3 displays the population of people that were eligible for
+voting in 2018 and 2022. The data points for 2018 are purple and the
+data points for 2022 are yellow. From the figure, it can be seen that
+generally, more people are eligible to vote in 2022. Many points did not
+experience either an increase or a decrease in 2022 compared to 2018.
+External factors should be considered, especially from the information
+provided from Figures 1 and 2, where the voting turnout estimate and
+rate was lower in 2022.</p>
 <pre class="r"><code>abortionvoting_df %&gt;%
   drop_na() %&gt;%
   ggplot(aes(x = state_abv)) +
@@ -443,6 +463,10 @@ div.tocify {
     y = &quot;Difference&quot;,
     caption = &quot;Figure 4. Voting Age Population in 2018 and 2022.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%204-1.png" width="672" /></p>
+<p>Figure 4 depicts the voting age population in 2018 and 2022. The data
+points for 2018 are purple and the data points for 2022 are yellow. From
+the figure, it can be seen that generally the voting age population in
+2022 is higher than the voting age population in 2018.</p>
 </div>
 <div id="abortion-laws-and-accessibility-graphs" class="section level2">
 <h2><strong>Abortion Laws and Accessibility Graphs</strong></h2>
@@ -458,7 +482,20 @@ div.tocify {
     y = &quot;Distance&quot;,
     caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
 <p><img src="visualization_files/figure-html/figure%205-1.png" width="672" /></p>
+<p>Figure 5 portrays the average distance from an abortion clinic in
+June and in July. The data points for the month of July are purple and
+the data points for the month of June are yellow. From this figure, we
+can see that the distance from an abortion clinic increases in July,
+compared to June. This is important to consider, especially with Roe
+vs. Wade being overturned in June. From this figure, the magnitude that
+policy has on institutions can be seen.</p>
 <p><img src="images/abortion_status.JPG" style="width:75%"></p>
+<p>This figure was coded in QGIS and shows the status of abortion in
+2022. The legend on the right codes the colors on the map, and
+highlights where abortion is legal, prohibited, or has a functional ban.
+Abortion status of states on this figure can be compared with the data
+from previous figures to inform politicians and other administrators on
+the impact of abortion status on voting.</p>
 </div>
 
 
