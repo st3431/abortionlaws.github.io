@@ -406,7 +406,11 @@ to October 1st, 2022.</p>
 in each state. This data comes from <a
 href="https://lawatlas.org/datasets/abortion-bans">Temple University’s
 Policy Surveillance Program</a>. The data set looks at abortion
-regulations starting from December 1, 2018 through October 1, 2021. We
+regulations starting from December 1, 2018 through October 1, 2021. The
+<code>bans2018</code> is cleaned and tidied to prepare for merging with
+other data sets. Note that states that had no abortion restrictions in
+2018 were intentionally coded as <code>.</code> by the original coder.
+These were replaced with <code>0</code> to reflect their true status. We
 are also using data on abortion laws restriction status by state after
 Roe v. Wade was overturned. This data that include updates through
 November 2022 comes from the non-profit Lucy Burns Institute <a
@@ -414,7 +418,9 @@ href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
 The data set was not available to download so we scraped it. In addition
 to abortion laws this source also includes laws defining restrictions on
 abortions such as state cases which prohibit abortion after specific
-gestational limits or number of weeks post-fertilization.</p>
+gestational limits or number of weeks post-fertilization. A
+<code>year</code> and <code>state_abv</code> variables were created, and
+Washington DC was renamed to <code>District of Columbia</code>.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
