@@ -406,6 +406,49 @@ resource, whether this is a private physician, hospital or a clinic. The
 distances are calculated at a county level for each month. This
 information was collected by Caitlin Myers and has information from 2009
 to October 1st, 2022.</p>
+<p>The dataset from Myers Abortion Facility Database was downloaded and
+read in. The dataset was filtered to only include distances from June
+2022 and July 2022 to reflect the immediate change in average distance
+to abortion provider immediately before and after the overturning of Roe
+v. Wade. Variables of interest, such as county, state, year, month, and
+distance to closest abortion clinic, were kept. After converting
+numerical months to abbrevations, the dataset was pivoted to a wide
+format to create a variable for each months’ distance. The
+<code>dist_change</code> variable was created taking the difference in
+average distance per county for the two months.</p>
+<pre class="r"><code>clinicdist =
+  read_csv(&quot;datasets/2022.10.01_abortionaccess_countyxmonth.csv&quot;)
+
+countydist_change = 
+  subset(clinicdist, year == 2022 &amp; (month == 6 | month == 7)) %&gt;%
+  select(origin_county_name, origin_state, year, month, distance_origintodest) %&gt;%
+  mutate(
+    month = month.abb[month]
+  ) %&gt;%
+  pivot_wider(
+    names_from = &quot;month&quot;, 
+    values_from = &quot;distance_origintodest&quot;) %&gt;%
+  mutate(
+     dist_change = Jul - Jun
+  )</code></pre>
+<p>After selecting variables for analysis and pivoting to wide format,
+the mean distance for each state was taken by averaging all counties by
+month and change in average distance. These means were then merged by
+state to create one finalized distance dataset.</p>
+<pre class="r"><code>statedist_change = 
+  aggregate(dist_change ~ origin_state, countydist_change, mean)
+
+statedist_Jun =
+  aggregate(Jun ~ origin_state, countydist_change, mean)
+
+statedist_Jul =
+  aggregate(Jul ~ origin_state, countydist_change, mean)
+
+statedist = 
+  merge(statedist_Jun, statedist_Jul, by = c(&quot;origin_state&quot;)) %&gt;%
+  merge(statedist_change, by = c(&quot;origin_state&quot;))
+
+write.csv(statedist,&quot;data_cleaned/statedist_final.csv&quot;, row.names = FALSE)</code></pre>
 </div>
 <div id="source-2-abortion-laws-by-state" class="section level2">
 <h2>Source 2: Abortion Laws by State</h2>
@@ -422,9 +465,10 @@ are also using data on abortion laws restriction status by state after
 Roe v. Wade was overturned. This data that include updates through
 November 2022 comes from the non-profit Lucy Burns Institute <a
 href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
-The data set was not available to download so we scraped it. A
-<code>year</code> and <code>state_abv</code> variables were created, and
-Washington DC was renamed to <code>District of Columbia</code>.</p>
+The data set was not available to download so we able to scrape it from
+the website. A <code>year</code> and <code>state_abv</code> variables
+were created, and Washington DC was renamed to
+<code>District of Columbia</code>.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
