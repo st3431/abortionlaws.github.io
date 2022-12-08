@@ -13,7 +13,7 @@
 
 <title>Final Report</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -463,18 +456,23 @@ write.csv(statedist,&quot;data_cleaned/statedist_final.csv&quot;, row.names = FA
 <h3>Abortion Laws By State: <a
 href="https://lawatlas.org/datasets/abortion-bans">dataset</a></h3>
 <p><em>Abortion restrictions data</em></p>
-<div id="section" class="section level4">
-<h4>2018-2021</h4>
 <p>First, we read in the data on abortion laws restriction status by
-state 2018-2021 found <a
+state 2018 found <a
 href="https://lawatlas.org/datasets/abortion-bans">here</a>. The
-<code>bans2018</code> is then cleaned and tidied to prepare for merging
-with other datasets. Note that states that had no abortion restrictions
-in 2018 were intentionally coded as <code>.</code> by the original
-coder. These were replaced with <code>0</code> to reflect their status
-for further data analysis. A <code>year</code> and
+<code>bans2018</code> data set is then cleaned and tidied to prepare for
+merging with other data sets. Note that states that had no abortion
+restrictions in 2018 were intentionally coded as <code>.</code> by the
+original coder. These were replaced with <code>0</code> to reflect their
+status for further data analysis. A <code>year</code> and
 <code>state_abv</code> variables were created, and Washington DC was
-renamed to District of Columbia.</p>
+renamed to District of Columbia. Next, we read in the 2022 data on
+abortion restrictions by state found <a
+href="https://ballotpedia.org/Abortion_regulations_by_state">here</a>.
+Though this data set was not available to download, we were able to
+scrape it from the source webpage. A <code>year</code> and
+<code>state_abv</code> variables were added to the <code>bans2022</code>
+data set, and <code>Washington DC</code> was renamed
+<code>District of Columbia</code> to match the 2018 data set.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 
@@ -489,32 +487,7 @@ renamed to District of Columbia.</p>
     select(state, state_abv, year, abstatus) %&gt;% 
   filter(year == 2018)
 
-bans2018</code></pre>
-<pre><code>## # A tibble: 51 × 4
-##    state                state_abv  year abstatus
-##    &lt;chr&gt;                &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;   
-##  1 Alabama              AL         2018 1       
-##  2 Alaska               AK         2018 0       
-##  3 Arizona              AZ         2018 1       
-##  4 Arkansas             AR         2018 1       
-##  5 California           CA         2018 1       
-##  6 Colorado             CO         2018 0       
-##  7 Connecticut          CT         2018 1       
-##  8 Delaware             DE         2018 1       
-##  9 District of Columbia DC         2018 0       
-## 10 Florida              FL         2018 1       
-## # … with 41 more rows</code></pre>
-</div>
-<div id="section-1" class="section level4">
-<h4>2022</h4>
-<p>Next, we read in the 2022 data on abortion restrictions by state
-found <a
-href="https://ballotpedia.org/Abortion_regulations_by_state">here</a>. A
-<code>year</code> and <code>state_abv</code> variables were added, and
-Washington DC was renamed District of Columbia to match the 2018
-dataset. Though this dataset was not availabe to download, we were able
-to scrape it from the source webpage.</p>
-<pre class="r"><code>bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
+bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
 bans_page &lt;- read_html(bans_link)
 
 bans2022 &lt;- 
@@ -534,63 +507,53 @@ bans2022 &lt;-
   select(- threshold) %&gt;% 
   slice(-1) %&gt;% 
   head(51) %&gt;% 
-  arrange(state) 
-
-bans2022</code></pre>
-<pre><code>## # A tibble: 51 × 4
-##    state                abstatus state_abv  year
-##    &lt;chr&gt;                &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;
-##  1 Alabama              1        AL         2022
-##  2 Alaska               0        AK         2022
-##  3 Arizona              1        AZ         2022
-##  4 Arkansas             1        AR         2022
-##  5 California           1        CA         2022
-##  6 Colorado             0        CO         2022
-##  7 Connecticut          1        CT         2022
-##  8 Delaware             1        DE         2022
-##  9 District of Columbia 0        DC         2022
-## 10 Florida              1        FL         2022
-## # … with 41 more rows</code></pre>
-</div>
-</div>
-<div id="merge-the-tables" class="section level3">
-<h3>Merge the tables</h3>
-<p>Finally, we merge 2018-2021 and 2022 datasets together. The resulting
-dataset is saved as a CSV file to merge with datasets on voter turnout
-and clinic abortion distances.</p>
+  arrange(state) </code></pre>
+<p>Finally, we merge 2018-2021 and 2022 data sets together. The
+resulting data set is saved as a CSV file to merge with data sets on
+voter turnout and clinic abortion distances. The new data set include 4
+variables, some of which are listed below:</p>
+<ul>
+<li><code>state</code>: State name</li>
+<li><code>abstatus18</code>: Abortion restriction status in 2018 ( 1 =
+restricted, 0 = not restricted)</li>
+<li><code>abstatus22</code>: Abortion restriction status in 2022 ( 1 =
+restricted, 0 = not restricted)</li>
+</ul>
 <pre class="r"><code>abortion_bans &lt;-
-  full_join(bans2018, bans2022)%&gt;% 
+  full_join(bans2018, bans2022) %&gt;% 
   arrange(state, year) %&gt;% 
   pivot_wider(
     names_from = year,
     values_from = abstatus) %&gt;% 
-  rename(abstatus18 = &#39;2018&#39;, abstatus22 = &#39;2022&#39;) %&gt;% 
-  write_csv(&quot;data_cleaned/abortion_bans_final.csv&quot;)</code></pre>
-<pre><code>## Joining, by = c(&quot;state&quot;, &quot;state_abv&quot;, &quot;year&quot;, &quot;abstatus&quot;)</code></pre>
-<pre class="r"><code>abortion_bans</code></pre>
-<pre><code>## # A tibble: 51 × 4
-##    state                state_abv abstatus18 abstatus22
-##    &lt;chr&gt;                &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     
-##  1 Alabama              AL        1          1         
-##  2 Alaska               AK        0          0         
-##  3 Arizona              AZ        1          1         
-##  4 Arkansas             AR        1          1         
-##  5 California           CA        1          1         
-##  6 Colorado             CO        0          0         
-##  7 Connecticut          CT        1          1         
-##  8 Delaware             DE        1          1         
-##  9 District of Columbia DC        0          0         
-## 10 Florida              FL        1          1         
-## # … with 41 more rows</code></pre>
+  rename(abstatus18 = &#39;2018&#39;, abstatus22 = &#39;2022&#39;) 
+
+  write_csv(abortion_bans, &quot;data_cleaned/abortion_bans_final.csv&quot;)</code></pre>
 </div>
 <div id="voter-turnout-by-state-dataset" class="section level3">
 <h3>Voter Turnout By State: <a
 href="https://www.electproject.org/2022g">dataset</a></h3>
-<p>Cleaning both the Voting 2022 dataset and the Voting 2018
-dataset:</p>
-<pre class="r"><code>library(tidyverse)
-library(tidyr)
-library(readxl)
+<p>The 2022 Voter Turnout dataset was pulled from <a
+href="https://www.electproject.org/2022g">US Elections Project</a>. The
+data was downloaded as an xlsx file and read into R with a range
+restriction because the dataset had notes clarifying the data that were
+not useful to import into R. The names of variables of interest were
+renamed to <code>State</code>, <code>turnout_estimate2022</code>,
+<code>turnoutrate2022</code>, <code>voting_eligible_pop2022</code>, and
+<code>voting_age_pop2022</code> because the original names in the
+dataset had been confusing. Those four variables plus
+<code>state_abv</code> was selected out of the dataset. The other
+variables in the dataset involved data on the percent of people who were
+eligible to vote based on age, but were ineligible because of other
+factors which were not of interest to us so they were not kept in our
+final dataset.</p>
+<p>The 2022 Voter Turnout dataset was pulled from <a
+href="https://www.electproject.org/2018g">US Elections Project</a>. This
+dataset was similar to the 2022 Vote Turnout dataset so an identical
+cleaning process was conducted.</p>
+<pre class="r"><code>  read_xlsx(&quot;datasets/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
+  janitor::clean_names() %&gt;% 
+  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)
 
 voting2022_df =
   read_xlsx(&quot;datasets/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
@@ -603,7 +566,17 @@ voting2018_df =
   janitor::clean_names() %&gt;%  
   rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
   select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
-<p>Merging the voting datasets:</p>
+<p>The two datasets were then merged by the <code>state_abv</code>
+variable. New variables were created that were the difference in values
+between 2022 and 2018 so that we could see how values changed between
+the two elections. These variables are
+<code>turnout_estimate_difference</code>,
+<code>turnout_Rate_difference</code>,
+<code>voting_eligible_difference</code>, and
+<code>voting_age_difference</code>. In the merge, there ended up being
+two State variables: <code>state.x</code> and <code>state.y</code>. One
+of the variables were removed and the other one was renamed to
+<code>state</code>.</p>
 <pre class="r"><code>voting_df = 
   full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
   select(-state.x) %&gt;% 
@@ -616,10 +589,26 @@ write.csv(voting_df,&quot;data_cleaned/Voting Turnout - Final.csv&quot;, row.nam
 </div>
 <div id="merging-the-three-datasets" class="section level3">
 <h3><strong>Merging the Three Datasets</strong></h3>
-<pre class="r"><code>library(tidyverse) 
-library(tidyr)
-
-abortionbans_df = 
+<p>The final three datasets were merged into one large datasets to
+prepare it for analysis. The Abortion Bans dataset was imported into R
+from the .csv file. The Voting Turnout datastet was imported into R from
+the .csv file and the United States row was removed because none of the
+other datasets had an equivalent row. The Distance to an Abortion Clinic
+dataset was imported and the <code>origin_state</code> variable was
+renamed to <code>state_abv</code> to match the other two datasets since
+this was the variable that would be used to join the three datasets.</p>
+<p>The Abortion Bans and Voting Turnout datasets were merged first by
+the <code>state_abv</code> variable that existed in both datasets. In
+the merge, there ended up being two State variables:
+<code>state.x</code> and <code>state.y</code>. One of the variables were
+removed and the other one was renamed to <code>state</code>. This
+combined dataset was then combined with the Distance to an Aborion
+Clinic dataset by the <code>state_abv</code> variable that existed in
+both datasets. The <code>jun</code> variable was renamed to
+<code>clinicdistance_jun</code> and the <code>jul</code> variable was
+renamed to <code>clinicdistance_jul</code> to clarify what these
+variables were.</p>
+<pre class="r"><code>abortionbans_df = 
   read.csv(&quot;data_cleaned/abortion_bans_final.csv&quot;) %&gt;% 
   janitor::clean_names() 
 

@@ -415,9 +415,10 @@ are also using data on abortion laws restriction status by state after
 Roe v. Wade was overturned. This data that include updates through
 November 2022 comes from the non-profit Lucy Burns Institute <a
 href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
-The data set was not available to download so we scraped it. A
-<code>year</code> and <code>state_abv</code> variables were created, and
-Washington DC was renamed to <code>District of Columbia</code>.</p>
+The data set was not available to download so we able to scrape it from
+the website. A <code>year</code> and <code>state_abv</code> variables
+were created, and Washington DC was renamed to
+<code>District of Columbia</code>.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
   janitor::clean_names() %&gt;% 

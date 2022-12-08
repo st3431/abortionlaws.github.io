@@ -7,7 +7,23 @@ output:
     code_folding: hide 
    
 ---
+```{r include=FALSE, message=FALSE, warning=FALSE}
 
+library(tidyverse)
+library(rvest)
+library(readxl)
+library(here)
+library(ggpubr)
+
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE,
+	results = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%")
+```
 
 ## **Motivation**  
 
@@ -26,11 +42,6 @@ Based on the available data we were interested in answering the following questi
 ### **Cleaning the data sets** 
 
 ### Abortion Clinic Distances By County and State: [dataset](https://osf.io/pfxq3/)
-
-```{r setup, include=FALSE, message = FALSE, warning = FALSE}
-library(tidyverse)
-library(here)
-```
 
 ```{r, message = FALSE}
 clinicdist =
@@ -69,33 +80,9 @@ write.csv(statedist,"data_cleaned/statedist_final.csv", row.names = FALSE)
 
 ### Abortion Laws By State: [dataset](https://lawatlas.org/datasets/abortion-bans)
 
-```{r, include = FALSE, message=FALSE, warning=FALSE}
-
-library(tidyverse)
-library(rvest)
-library(readxl)
-
-knitr::opts_chunk$set(
-	echo = TRUE,
-	warning = FALSE,
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%")
-
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
-options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
-```
-
 *Abortion restrictions data* 
 
-#### 2018-2021
-
-First, we read in the data on abortion laws restriction status by state 2018-2021 found [here](https://lawatlas.org/datasets/abortion-bans). The `bans2018` is then cleaned and tidied to prepare for merging with other datasets. Note that states that had no abortion restrictions in 2018 were intentionally coded as `.` by the original coder. These were replaced with `0` to reflect their status for further data analysis. A `year` and `state_abv` variables were created, and Washington DC was renamed to District of Columbia.
+First, we read in the data on abortion laws restriction status by state 2018 found [here](https://lawatlas.org/datasets/abortion-bans). The `bans2018` data set is then cleaned and tidied to prepare for merging with other data sets. Note that states that had no abortion restrictions in 2018 were intentionally coded as `.` by the original coder. These were replaced with `0` to reflect their status for further data analysis. A `year` and `state_abv` variables were created, and Washington DC was renamed to District of Columbia. Next, we read in the 2022 data on abortion restrictions by state found [here](https://ballotpedia.org/Abortion_regulations_by_state). Though this data set was not available to download, we were able to scrape it from the source webpage. A `year` and `state_abv` variables were added to the `bans2022` data set, and `Washington DC` was renamed `District of Columbia` to match the 2018 data set. 
 
 
 ```{r}
@@ -113,14 +100,6 @@ bans2018 <-
     select(state, state_abv, year, abstatus) %>% 
   filter(year == 2018)
 
-bans2018
-```
-
-#### 2022
-
-Next, we read in the 2022 data on abortion restrictions by state found [here](https://ballotpedia.org/Abortion_regulations_by_state). A `year` and `state_abv` variables were added, and Washington DC was renamed District of Columbia to match the 2018 dataset. Though this dataset was not availabe to download, we were able to scrape it from the source webpage. 
-
-```{r}
 bans_link <- "https://ballotpedia.org/Abortion_regulations_by_state"
 bans_page <- read_html(bans_link)
 
@@ -142,25 +121,25 @@ bans2022 <-
   slice(-1) %>% 
   head(51) %>% 
   arrange(state) 
-
-bans2022
 ```
 
-### Merge the tables
+Finally, we merge 2018-2021 and 2022 data sets together. The resulting data set is saved as a CSV file to merge with data sets on voter turnout and clinic abortion distances. The new data set include 4 variables, some of which are listed below:
 
-Finally, we merge 2018-2021 and 2022 datasets together. The resulting dataset is saved as a CSV file to merge with datasets on voter turnout and clinic abortion distances. 
+* `state`: State name
+* `abstatus18`: Abortion restriction status in 2018 ( 1 = restricted, 0 = not restricted)
+* `abstatus22`: Abortion restriction status in 2022 ( 1 = restricted, 0 = not restricted)
+
 
 ```{r}
 abortion_bans <-
-  full_join(bans2018, bans2022)%>% 
+  full_join(bans2018, bans2022) %>% 
   arrange(state, year) %>% 
   pivot_wider(
     names_from = year,
     values_from = abstatus) %>% 
-  rename(abstatus18 = '2018', abstatus22 = '2022') %>% 
-  write_csv("data_cleaned/abortion_bans_final.csv")
+  rename(abstatus18 = '2018', abstatus22 = '2022') 
 
-abortion_bans
+  write_csv(abortion_bans, "data_cleaned/abortion_bans_final.csv")
 ```
 
 
@@ -172,9 +151,10 @@ The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://ww
 The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2018g). This dataset was similar to the 2022 Vote Turnout dataset so an identical cleaning process was conducted. 
 
 ```{r, message = FALSE}
-library(tidyverse)
-library(tidyr)
-library(readxl)
+  read_xlsx("datasets/2022 November General Election.xlsx", sheet = "Turnout Rates", range = "A2:N54") %>%
+  janitor::clean_names() %>% 
+  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %>% 
+  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)
 
 voting2022_df =
   read_xlsx("datasets/2022 November General Election.xlsx", sheet = "Turnout Rates", range = "A2:N54") %>%
@@ -212,10 +192,6 @@ The final three datasets were merged into one large datasets to prepare it for a
 The Abortion Bans and Voting Turnout datasets were merged first by the `state_abv` variable that existed in both datasets. In the merge, there ended up being two State variables: `state.x` and `state.y`. One of the variables were removed and the other one was renamed to `state`. This combined dataset was then combined with the Distance to an Aborion Clinic dataset by the `state_abv` variable that existed in both datasets. The `jun` variable was renamed to `clinicdistance_jun` and the `jul` variable was renamed to `clinicdistance_jul` to clarify what these variables were. 
 
 ```{r, message = FALSE}
-
-library(tidyverse) 
-library(tidyr)
-
 abortionbans_df = 
   read.csv("data_cleaned/abortion_bans_final.csv") %>% 
   janitor::clean_names() 
@@ -248,8 +224,6 @@ write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.nam
 
 
 ```{r, echo = FALSE, message= FALSE}
-library(tidyverse)
-library(tidyr)
 abortionbans_df = 
   read.csv("data_cleaned/abortion_bans_final.csv") %>% 
   janitor::clean_names() 
@@ -274,11 +248,7 @@ write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.nam
 
 
 ```{r, echo = FALSE, message= FALSE}
-library(tidyverse)
-library(ggplot2)
-library(knitr)
-library(lubridate)
-library(ggpubr)
+
 ```
 
 ```{r, echo = FALSE}
