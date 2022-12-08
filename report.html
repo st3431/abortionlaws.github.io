@@ -409,15 +409,31 @@ address.</p>
 </div>
 <div id="initial-questions" class="section level2">
 <h2><strong>Initial Questions</strong></h2>
-<p>Based on the available data we were interested in answering the
-following questions:</p>
+<p>From the available data we are interested in answering the following
+questions:</p>
+<ol style="list-style-type: decimal">
+<li>Regarding abortion laws and accessibility
 <ul>
-<li>How has voter turnout and eligibility changed by state between 2018
-and 2022?</li>
 <li>Since the overturn of Roe v Wade how has accessibility to abortion
-clinics changed between June 2022 and July 2022?</li>
-<li>How do abortion laws and restrictions differ among each state?</li>
-</ul>
+clinics changed between June 2022 and July 2022?<br />
+</li>
+<li>How do abortion laws and restrictions differ among each state?<br />
+</li>
+</ul></li>
+<li>Regarding voter eligibility and turnout
+<ul>
+<li>How has the voting eligibility population changed from 2018 to
+2022?</li>
+<li>Was there any change in voter turnout rate from 2018 to 2022?</li>
+</ul></li>
+<li>Regarding the relationship between abortion laws and voter turnout
+<ul>
+<li>What, if any, influence has abortion laws in 2022 had on change in
+voter turnout from 2018 to 2022?</li>
+<li>What, if any, influence has abortion provider accessibility had on
+voter turnout rates from 2018 to 2022?</li>
+</ul></li>
+</ol>
 </div>
 <div id="data-processing-and-cleaning" class="section level2">
 <h2><strong>Data Processing and Cleaning</strong></h2>
@@ -693,7 +709,7 @@ write.csv(abortionvoting_df,&quot;data_cleaned/finalprojectfinaldataset.csv&quot
   labs(
     title = &quot;Voting Eligibility Population in 2018 vs 2022&quot;,
     x = &quot;State&quot;,
-    y = &quot;Difference&quot;,
+    y = &quot;Population&quot;,
     caption = &quot;Figure 3. Voting Eligibility Population in 2018 and 2022.&quot;)</code></pre>
 <p><img src="report_files/figure-html/figure%203-1.png" width="90%" /></p>
 <pre class="r"><code>abortionvoting_df %&gt;%
@@ -728,6 +744,20 @@ write.csv(abortionvoting_df,&quot;data_cleaned/finalprojectfinaldataset.csv&quot
 </div>
 <div id="discussion" class="section level2">
 <h2><strong>Discussion</strong></h2>
+<p>The first set of questions we were interested in answering focused on
+abortion laws and accessibility. Unfortunately, as expected, we did see
+an increase in the average distance to a safe abortion provider in
+states such as Alabama, Arkansas and Oklahoma. These are states that
+have already had strict laws regarding abortion prior to the overturn of
+Roe v. Wade. With the overturn, accessibility to safe abortions has only
+become more inaccessible especially in Texas. In figure 5 we can see
+that the average distance to an Abortion Clinic dramatically increases
+from an average of ~140 miles to ~ 300 miles.</p>
+<p>When assessing the voter turnout data, it was surprising to see that
+in most states, voter turnout was either the same in 2018 and 2022 or
+there was a lower voter turnout in 2022. This was interesting to note as
+the eligible population (figure 3) stayed the same in most states, with
+2022 actually having a higher eligible population in 2022.</p>
 </div>
 
 

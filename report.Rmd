@@ -31,11 +31,19 @@ The motivation behind this project comes from the consistent political discourse
 
 ## **Initial Questions** 
 
-Based on the available data we were interested in answering the following questions: 
+From the available data we are interested in answering the following questions: 
 
-- How has voter turnout and eligibility changed by state between 2018 and 2022? 
-- Since the overturn of Roe v Wade how has accessibility to abortion clinics changed between June 2022 and July 2022? 
-- How do abortion laws and restrictions differ among each state? 
+1. Regarding abortion laws and accessibility
+    -  Since the overturn of Roe v Wade how has accessibility to          abortion clinics changed between June 2022 and July 2022?  
+    - How do abortion laws and restrictions differ among each state?  
+2. Regarding voter eligibility and turnout 
+    - How has the voting eligibility population changed from 2018 to        2022? 
+    - Was there any change in voter turnout rate from 2018 to 2022?
+    
+3. Regarding the relationship between abortion laws and voter         turnout
+    - What, if any, influence has abortion laws in 2022 had on            change in voter turnout from 2018 to 2022? 
+    - What, if any, influence has abortion provider accessibility         had on voter turnout rates from 2018 to 2022?
+
 
 ## **Data Processing and Cleaning**
 
@@ -305,7 +313,7 @@ abortionvoting_df %>%
   labs(
     title = "Voting Eligibility Population in 2018 vs 2022",
     x = "State",
-    y = "Difference",
+    y = "Population",
     caption = "Figure 3. Voting Eligibility Population in 2018 and 2022.")
 ```
 
@@ -346,3 +354,6 @@ abortionvoting_df %>%
 
 ## **Discussion**
 
+The first set of questions we were interested in answering focused on abortion laws and accessibility. Unfortunately, as expected, we did see an increase in the average distance to a safe abortion provider in states such as Alabama, Arkansas and Oklahoma. These are states that have already had strict laws regarding abortion prior to the overturn of Roe v. Wade. With the overturn, accessibility to safe abortions has only become more inaccessible especially in Texas. In figure 5 we can see that the average distance to an Abortion Clinic dramatically increases from an average of ~140 miles to ~ 300 miles. 
+
+When assessing the voter turnout data, it was surprising to see that in most states, voter turnout was either the same in 2018 and 2022 or there was a lower voter turnout in 2022. This was interesting to note as the eligible population (figure 3) stayed the same in most states, with 2022 actually having a higher eligible population in 2022.   

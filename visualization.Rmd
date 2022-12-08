@@ -97,7 +97,7 @@ abortionvoting_df %>%
   labs(
     title = "Voting Eligibility Population in 2018 vs 2022",
     x = "State",
-    y = "Difference",
+    y = "Population",
     caption = "Figure 3. Voting Eligibility Population in 2018 and 2022.")
 ```
 
