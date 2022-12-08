@@ -13,7 +13,7 @@
 
 <title>Data Sources</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -183,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -192,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -228,6 +222,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -344,18 +341,28 @@ div.tocify {
       <a href="analysis.html">Statistical Analysis</a>
     </li>
     <li>
-      <a href="mapping.html">Visualizations</a>
+      <a href="visualization.html">Visualizations</a>
     </li>
   </ul>
 </li>
 <li>
   <a href="report.html">Project Report</a>
 </li>
-<li>
-  <a href="https://github.com/st3431/abortionlaws.github.io">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-github fa-lg"></span>
      
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://github.com/st3431/p8105_finalproject">Data Cleaning Repository</a>
+    </li>
+    <li>
+      <a href="https://github.com/st3431/abortionlaws.github.io">Website Repository</a>
+    </li>
+  </ul>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -363,6 +370,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -396,10 +411,61 @@ addition to abortion laws this source also includes laws defining
 restrictions on abortions such as state cases which prohibit abortion
 after specific gestational limits or number of weeks
 post-fertilization.</p>
+<pre class="r"><code>bans2018 &lt;-
+  read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(
+    state = jurisdiction,
+    abstatus = prohibit_req) %&gt;% 
+  mutate(
+    state_abv = state.abb[match(state, state.name)],
+    state_abv = ifelse(is.na(state_abv), &quot;DC&quot;, state_abv),
+    year = lubridate::year(effective_date),
+    abstatus = replace(abstatus, abstatus == &quot;.&quot;, &quot;0&quot;)) %&gt;% 
+    select(state, state_abv, year, abstatus) %&gt;% 
+  filter(year == 2018)</code></pre>
+<p>We are also using data on abortion laws restriction status by state
+in 2022 after Roe v. Wade was overturned. This data comes from the
+nonproft Lucy Burns Institute <a
+href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
+The dataset set was not available to download so we scraped it.</p>
+<pre class="r"><code>bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
+bans_page &lt;- read_html(bans_link)
+
+bans2022 &lt;- 
+  bans_page %&gt;%  html_nodes(&quot;table&quot;) %&gt;% .[2] %&gt;% 
+  html_table() %&gt;% .[[1]] %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(
+    state = state_abortion_restrictions_based_on_stage_of_pregnancy,
+    abstatus = state_abortion_restrictions_based_on_stage_of_pregnancy_2,
+    threshold = state_abortion_restrictions_based_on_stage_of_pregnancy_3) %&gt;% 
+  mutate(
+  state = replace(state, state == &quot;Washington, D.C.&quot;, &quot;District of Columbia&quot;),
+  state_abv = state.abb[match(state, state.name)],
+  state_abv = ifelse(is.na(state_abv), &quot;DC&quot;, state_abv),
+  year = 2022,
+  abstatus = recode(abstatus, &quot;Yes&quot; = &quot;1&quot;, &quot;No&quot; = &quot;0&quot;)) %&gt;% 
+  select(- threshold) %&gt;% 
+  slice(-1) %&gt;% 
+  head(51) %&gt;% 
+  arrange(state) </code></pre>
+<p>We then merged both 2018 and 2022 datasets after harmonizing the
+variable names. The resulting dataset was saved as a CSV file for later
+use in further data processing.</p>
+<pre class="r"><code>abortion_bans &lt;-
+  full_join(bans2018, bans2022)%&gt;% 
+  arrange(state, year) %&gt;% 
+  pivot_wider(
+    names_from = year,
+    values_from = abstatus) %&gt;% 
+  rename(abstatus18 = &#39;2018&#39;, abstatus22 = &#39;2022&#39;) 
+
+write_csv(abortion_bans, &quot;data_cleaned/abortion_bans_final.csv&quot;)</code></pre>
 </div>
 <div id="source-3-voter-turnout-data" class="section level2">
 <h2>Source 3: Voter Turnout Data</h2>
-<p>The voter turnout data was pulled from the <a
+<p>The voter turnout data was pulled from <a
 href="https://www.electproject.org/2022g">US Elections Project</a>. This
 source was created by a Professor in the Department of Political Science
 at the University of Florida.</p>
@@ -440,6 +506,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

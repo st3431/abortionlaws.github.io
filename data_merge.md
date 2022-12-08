@@ -1,11 +1,8 @@
----
-title: "datamerge"
-output: github_document
-date: "2022-12-06"
----
+datamerge
+================
+2022-12-06
 
-```{r}
-
+``` r
 library(tidyverse) 
 library(tidyr)
 
@@ -35,4 +32,3 @@ abortionvoting_df =
   
 write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.names = FALSE)
 ```
-

@@ -11,7 +11,7 @@
 
 
 
-<title>Statistical Analysis</title>
+<title>Visualizations</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -228,6 +229,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -374,14 +378,88 @@ div.tocify {
 
 <div id="header">
 
-
-
-<h1 class="title toc-ignore">Statistical Analysis</h1>
-
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
 </div>
 
 
 
+<h1 class="title toc-ignore">Visualizations</h1>
+
+</div>
+
+
+<div id="voting-turnout-and-eligibility-graphs" class="section level2">
+<h2><strong>Voting Turnout and Eligibility Graphs</strong></h2>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = turnout_rate2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = turnout_rate2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Turnout Rate in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Rate Difference&quot;,
+    caption = &quot;Figure 1. Voting Turnout Rate in 2018 and 2022.&quot;)</code></pre>
+<p><img src="visualization_files/figure-html/figure%201-1.png" width="672" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = turnout_estimate2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = turnout_estimate2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Turnout Estimate Number in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Rate Difference&quot;,
+    caption = &quot;Figure 2. Turnout Estimate Number in 2018 and 2022.&quot;)</code></pre>
+<p><img src="visualization_files/figure-html/figure%202-1.png" width="672" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = voting_eligible_pop2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = voting_eligible_pop2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Eligibility Population in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Difference&quot;,
+    caption = &quot;Figure 3. Voting Eligibility Population in 2018 and 2022.&quot;)</code></pre>
+<p><img src="visualization_files/figure-html/figure%203-1.png" width="672" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = voting_age_pop2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = voting_age_pop2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Age Population in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Difference&quot;,
+    caption = &quot;Figure 4. Voting Age Population in 2018 and 2022.&quot;)</code></pre>
+<p><img src="visualization_files/figure-html/figure%204-1.png" width="672" /></p>
+</div>
+<div id="abortion-laws-and-accessibility-graphs" class="section level2">
+<h2><strong>Abortion Laws and Accessibility Graphs</strong></h2>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+  geom_point(aes(y = clinicdistance_jun, colour = &quot;June&quot;)) +
+  geom_point(aes(y = clinicdistance_jul, colour = &quot;July&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Distance Changed from June to July, 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Distance&quot;,
+    caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
+<p><img src="visualization_files/figure-html/figure%205-1.png" width="672" /></p>
+<p><img src="images/abortion_status.JPG" style="width:75%"></p>
+</div>
 
 
 
@@ -418,6 +496,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

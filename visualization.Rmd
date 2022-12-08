@@ -12,14 +12,14 @@ output:
 library(tidyverse)
 library(tidyr)
 abortionbans_df = 
-  read.csv("Data/abortion_bans_final.csv") %>% 
+  read.csv("data_cleaned/abortion_bans_final.csv") %>% 
   janitor::clean_names() 
 votingturnout_df = 
-  read.csv("Voting Turnout - Final.csv") %>% 
+  read.csv("data_cleaned/Voting Turnout - Final.csv") %>% 
   janitor::clean_names() %>% 
   filter(!row_number() %in% c(1))
 statedist_df = 
-  read.csv("Data/statedist_final.csv") %>% 
+  read.csv("data_cleaned/statedist_final.csv") %>% 
   janitor::clean_names() %>% 
   rename(state_abv = origin_state)
 abortionvoting_df =
@@ -30,7 +30,7 @@ abortionvoting_df =
   full_join(abortionvoting_df, statedist_df, by = "state_abv") %>% 
   rename(clinicdistance_jun = jun, clinicdistance_jul = jul)
   
-write.csv(abortionvoting_df,"Data/finalprojectfinaldataset.csv", row.names = FALSE)
+write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.names = FALSE)
 ```
 
 
@@ -52,6 +52,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
+## **Voting Turnout and Eligibility Graphs**
 
 ```{r figure 1}
 abortionvoting_df %>%
@@ -67,6 +68,7 @@ abortionvoting_df %>%
     caption = "Figure 1. Voting Turnout Rate in 2018 and 2022.")
 ```
 Figure 1 shows the voting turnout rate for all 50 states in 2018 and 2022. The data points for 2018 are purple, and the data points for 2022 are yellow. From the figure, it can be determined that generally, the voting turnout rate in 2018 was higher than the voting turnout rate in 2022. 
+
 
 ```{r figure 2}
 abortionvoting_df %>%
@@ -113,6 +115,8 @@ abortionvoting_df %>%
 ```
 Figure 4 depicts the voting age population in 2018 and 2022. The data points for 2018 are purple and the data points for 2022 are yellow. From the figure, it can be seen that generally the voting age population in 2022 is higher than the voting age population in 2018. 
 
+## **Abortion Laws and Accessibility Graphs** 
+
 ```{r figure 5}
 abortionvoting_df %>%
   drop_na() %>%
@@ -127,8 +131,6 @@ abortionvoting_df %>%
     caption = "Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.")
 ```
 Figure 5 portrays the average distance from an abortion clinic in June and in July. The data points for the month of July are purple and the data points for the month of June are yellow. From this figure, we can see that the distance from an abortion clinic increases in July, compared to June. This is important to consider, especially with Roe vs. Wade being overturned in June. From this figure, the magnitude that policy has on institutions can be seen. 
-
-## Abortion Laws in the U.S. 2022
 
 <img src="images/abortion_status.jpg" style="width:75%">
 This figure was coded in QGIS and shows the status of abortion in 2022. The legend on the right codes the colors on the map, and highlights where abortion is legal, prohibited, or has a functional ban. Abortion status of states on this figure can be compared with the data from previous figures to inform politicians and other administrators on the impact of abortion status on voting. 

@@ -25,16 +25,21 @@ On June 24, 2022 the U.S. Supreme Court overturned the constitutional right to a
 
 Data: 
 
-- A description of each data source
+- A description of the data sources including: 
+    - Description of variables 
+    - Where and when the data was compiled 
 
 
 Analysis: 
 
 - Statistical analyses run on abortion bans, accessibility and voter turnout 
 - Visualizations which include the following:  
+    - Voting turnout rates in 2018 and 2022  
     - A map of the U.S. outlining abortion laws and restrictions by state 
     - Voter turnout change from the 2018 elections 
     - Voter eligibility rates in 2018 vs 2022 
+    - Change in voting age populations 
+    - Change in accessibility of abortion providers by state
 
 For a full in-depth description of our project visit our [project report](report.html) page. 
 

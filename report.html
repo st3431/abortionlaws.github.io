@@ -348,18 +348,28 @@ div.tocify {
       <a href="analysis.html">Statistical Analysis</a>
     </li>
     <li>
-      <a href="mapping.html">Visualizations</a>
+      <a href="visualization.html">Visualizations</a>
     </li>
   </ul>
 </li>
 <li>
   <a href="report.html">Project Report</a>
 </li>
-<li>
-  <a href="https://github.com/st3431/abortionlaws.github.io">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-github fa-lg"></span>
      
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://github.com/st3431/p8105_finalproject">Data Cleaning Repository</a>
+    </li>
+    <li>
+      <a href="https://github.com/st3431/abortionlaws.github.io">Website Repository</a>
+    </li>
+  </ul>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -384,7 +394,7 @@ div.tocify {
 
 
 <div id="motivation" class="section level2">
-<h2>Motivation</h2>
+<h2><strong>Motivation</strong></h2>
 <p>The motivation behind this project comes from the consistent
 political discourse around abortion laws. Abortion laws in the United
 States has a long history of being politicized, often being brought up
@@ -398,34 +408,316 @@ found this to be a timely and pressing public health issue to
 address.</p>
 </div>
 <div id="initial-questions" class="section level2">
-<h2>Initial Questions</h2>
+<h2><strong>Initial Questions</strong></h2>
 <p>Based on the available data we were interested in answering the
 following questions:</p>
 <ul>
-<li>How has voter turnout changed by state between 2018 and 2022?</li>
+<li>How has voter turnout and eligibility changed by state between 2018
+and 2022?</li>
 <li>Since the overturn of Roe v Wade how has accessibility to abortion
 clinics changed between June 2022 and July 2022?</li>
 <li>How do abortion laws and restrictions differ among each state?</li>
 </ul>
 </div>
 <div id="data-processing-and-cleaning" class="section level2">
-<h2>Data Processing and Cleaning</h2>
-<p><em>Cleaning Each Data Set</em></p>
-<ol style="list-style-type: decimal">
-<li><p>Abortion Clinic Distances By County and State <a
-href="https://osf.io/pfxq3/">dataset</a></p></li>
-<li><p>Abortion Laws By State <a
-href="https://lawatlas.org/datasets/abortion-bans">dataset</a></p></li>
-<li><p>Voter Turnout By State <a
-href="https://www.electproject.org/2022g">dataset</a></p></li>
-</ol>
-<p><em>Merging the Data Sets</em></p>
+<h2><strong>Data Processing and Cleaning</strong></h2>
+<div id="cleaning-the-data-sets" class="section level3">
+<h3><strong>Cleaning the data sets</strong></h3>
+</div>
+<div id="abortion-clinic-distances-by-county-and-state-dataset"
+class="section level3">
+<h3>Abortion Clinic Distances By County and State: <a
+href="https://osf.io/pfxq3/">dataset</a></h3>
+<pre class="r"><code>clinicdist =
+  read_csv(&quot;datasets/2022.10.01_abortionaccess_countyxmonth.csv&quot;)
+
+countydist_change = 
+  subset(clinicdist, year == 2022 &amp; (month == 6 | month == 7)) %&gt;%
+  select(origin_county_name, origin_state, year, month, distance_origintodest) %&gt;%
+  mutate(
+    month = month.abb[month]
+  ) %&gt;%
+  pivot_wider(
+    names_from = &quot;month&quot;, 
+    values_from = &quot;distance_origintodest&quot;) %&gt;%
+  mutate(
+     dist_change = Jul - Jun
+  )
+
+statedist_change = 
+  aggregate(dist_change ~ origin_state, countydist_change, mean)
+
+statedist_Jun =
+  aggregate(Jun ~ origin_state, countydist_change, mean)
+
+statedist_Jul =
+  aggregate(Jul ~ origin_state, countydist_change, mean)
+
+statedist = 
+  merge(statedist_Jun, statedist_Jul, by = c(&quot;origin_state&quot;)) %&gt;%
+  merge(statedist_change, by = c(&quot;origin_state&quot;))
+
+write.csv(statedist,&quot;data_cleaned/statedist_final.csv&quot;, row.names = FALSE)</code></pre>
+</div>
+<div id="abortion-laws-by-state-dataset" class="section level3">
+<h3>Abortion Laws By State: <a
+href="https://lawatlas.org/datasets/abortion-bans">dataset</a></h3>
+<p><em>Abortion restrictions data</em></p>
+<div id="section" class="section level4">
+<h4>2018-2021</h4>
+<p>First, we read in the data on abortion laws restriction status by
+state 2018-2021 found <a
+href="https://lawatlas.org/datasets/abortion-bans">here</a>. The
+<code>bans2018</code> is then cleaned and tidied to prepare for merging
+with other datasets. Note that states that had no abortion restrictions
+in 2018 were intentionally coded as <code>.</code> by the original
+coder. These were replaced with <code>0</code> to reflect their status
+for further data analysis. A <code>year</code> and
+<code>state_abv</code> variables were created, and Washington DC was
+renamed to District of Columbia.</p>
+<pre class="r"><code>bans2018 &lt;-
+  read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(
+    state = jurisdiction,
+    abstatus = prohibit_req) %&gt;% 
+  mutate(
+    state_abv = state.abb[match(state, state.name)],
+    state_abv = ifelse(is.na(state_abv), &quot;DC&quot;, state_abv),
+    year = lubridate::year(effective_date),
+    abstatus = replace(abstatus, abstatus == &quot;.&quot;, &quot;0&quot;)) %&gt;% 
+    select(state, state_abv, year, abstatus) %&gt;% 
+  filter(year == 2018)
+
+bans2018</code></pre>
+<pre><code>## # A tibble: 51 × 4
+##    state                state_abv  year abstatus
+##    &lt;chr&gt;                &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;   
+##  1 Alabama              AL         2018 1       
+##  2 Alaska               AK         2018 0       
+##  3 Arizona              AZ         2018 1       
+##  4 Arkansas             AR         2018 1       
+##  5 California           CA         2018 1       
+##  6 Colorado             CO         2018 0       
+##  7 Connecticut          CT         2018 1       
+##  8 Delaware             DE         2018 1       
+##  9 District of Columbia DC         2018 0       
+## 10 Florida              FL         2018 1       
+## # … with 41 more rows</code></pre>
+</div>
+<div id="section-1" class="section level4">
+<h4>2022</h4>
+<p>Next, we read in the 2022 data on abortion restrictions by state
+found <a
+href="https://ballotpedia.org/Abortion_regulations_by_state">here</a>. A
+<code>year</code> and <code>state_abv</code> variables were added, and
+Washington DC was renamed District of Columbia to match the 2018
+dataset. Though this dataset was not availabe to download, we were able
+to scrape it from the source webpage.</p>
+<pre class="r"><code>bans_link &lt;- &quot;https://ballotpedia.org/Abortion_regulations_by_state&quot;
+bans_page &lt;- read_html(bans_link)
+
+bans2022 &lt;- 
+  bans_page %&gt;%  html_nodes(&quot;table&quot;) %&gt;% .[2] %&gt;% 
+  html_table() %&gt;% .[[1]] %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(
+    state = state_abortion_restrictions_based_on_stage_of_pregnancy,
+    abstatus = state_abortion_restrictions_based_on_stage_of_pregnancy_2,
+    threshold = state_abortion_restrictions_based_on_stage_of_pregnancy_3) %&gt;% 
+  mutate(
+  state = replace(state, state == &quot;Washington, D.C.&quot;, &quot;District of Columbia&quot;),
+  state_abv = state.abb[match(state, state.name)],
+  state_abv = ifelse(is.na(state_abv), &quot;DC&quot;, state_abv),
+  year = 2022,
+  abstatus = recode(abstatus, &quot;Yes&quot; = &quot;1&quot;, &quot;No&quot; = &quot;0&quot;)) %&gt;% 
+  select(- threshold) %&gt;% 
+  slice(-1) %&gt;% 
+  head(51) %&gt;% 
+  arrange(state) 
+
+bans2022</code></pre>
+<pre><code>## # A tibble: 51 × 4
+##    state                abstatus state_abv  year
+##    &lt;chr&gt;                &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;
+##  1 Alabama              1        AL         2022
+##  2 Alaska               0        AK         2022
+##  3 Arizona              1        AZ         2022
+##  4 Arkansas             1        AR         2022
+##  5 California           1        CA         2022
+##  6 Colorado             0        CO         2022
+##  7 Connecticut          1        CT         2022
+##  8 Delaware             1        DE         2022
+##  9 District of Columbia 0        DC         2022
+## 10 Florida              1        FL         2022
+## # … with 41 more rows</code></pre>
+</div>
+</div>
+<div id="merge-the-tables" class="section level3">
+<h3>Merge the tables</h3>
+<p>Finally, we merge 2018-2021 and 2022 datasets together. The resulting
+dataset is saved as a CSV file to merge with datasets on voter turnout
+and clinic abortion distances.</p>
+<pre class="r"><code>abortion_bans &lt;-
+  full_join(bans2018, bans2022)%&gt;% 
+  arrange(state, year) %&gt;% 
+  pivot_wider(
+    names_from = year,
+    values_from = abstatus) %&gt;% 
+  rename(abstatus18 = &#39;2018&#39;, abstatus22 = &#39;2022&#39;) %&gt;% 
+  write_csv(&quot;data_cleaned/abortion_bans_final.csv&quot;)</code></pre>
+<pre><code>## Joining, by = c(&quot;state&quot;, &quot;state_abv&quot;, &quot;year&quot;, &quot;abstatus&quot;)</code></pre>
+<pre class="r"><code>abortion_bans</code></pre>
+<pre><code>## # A tibble: 51 × 4
+##    state                state_abv abstatus18 abstatus22
+##    &lt;chr&gt;                &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;     
+##  1 Alabama              AL        1          1         
+##  2 Alaska               AK        0          0         
+##  3 Arizona              AZ        1          1         
+##  4 Arkansas             AR        1          1         
+##  5 California           CA        1          1         
+##  6 Colorado             CO        0          0         
+##  7 Connecticut          CT        1          1         
+##  8 Delaware             DE        1          1         
+##  9 District of Columbia DC        0          0         
+## 10 Florida              FL        1          1         
+## # … with 41 more rows</code></pre>
+</div>
+<div id="voter-turnout-by-state-dataset" class="section level3">
+<h3>Voter Turnout By State: <a
+href="https://www.electproject.org/2022g">dataset</a></h3>
+<p>Cleaning both the Voting 2022 dataset and the Voting 2018
+dataset:</p>
+<pre class="r"><code>library(tidyverse)
+library(tidyr)
+library(readxl)
+
+voting2022_df =
+  read_xlsx(&quot;datasets/2022 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:N54&quot;) %&gt;%
+  janitor::clean_names() %&gt;% 
+  rename(state = x1, turnout_estimate2022 = preliminary_total_turnout_estimate, turnoutRate2022 = preliminary_turnout_rate, voting_eligible_pop2022 = voting_eligible_population_vep, voting_age_pop2022 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2022, turnoutRate2022, voting_eligible_pop2022, voting_age_pop2022, state_abv)
+
+voting2018_df = 
+    read_xlsx(&quot;datasets/2018 November General Election.xlsx&quot;, sheet = &quot;Turnout Rates&quot;, range = &quot;A2:P54&quot;) %&gt;%
+  janitor::clean_names() %&gt;%  
+  rename(state = x1, turnout_estimate2018 = estimated_or_actual_2018_total_ballots_counted, turnoutRate2018 = estimated_or_actual_2018_total_ballots_counted_vep_turnout_rate, voting_eligible_pop2018 = voting_eligible_population_vep, voting_age_pop2018 = voting_age_population_vap) %&gt;% 
+  select(state, turnout_estimate2018, turnoutRate2018, voting_eligible_pop2018, voting_age_pop2018, state_abv)</code></pre>
+<p>Merging the voting datasets:</p>
+<pre class="r"><code>voting_df = 
+  full_join(voting2022_df, voting2018_df, by = &quot;state_abv&quot;) %&gt;% 
+  select(-state.x) %&gt;% 
+  mutate(turnout_estimate_difference = turnout_estimate2022 - turnout_estimate2018, turnout_Rate_difference = turnoutRate2022 - turnoutRate2018, voting_eligible_difference = voting_eligible_pop2022 - voting_eligible_pop2018, voting_age_difference = voting_age_pop2022 - voting_age_pop2018) %&gt;% 
+  rename(state = state.y)
+
+voting_df &lt;- voting_df[, c(6, 5, 1, 7, 11, 2, 8, 12, 3, 9, 13, 4, 10, 14)]
+
+write.csv(voting_df,&quot;data_cleaned/Voting Turnout - Final.csv&quot;, row.names = FALSE)</code></pre>
+</div>
+<div id="merging-the-three-datasets" class="section level3">
+<h3><strong>Merging the Three Datasets</strong></h3>
+<pre class="r"><code>library(tidyverse) 
+library(tidyr)
+
+abortionbans_df = 
+  read.csv(&quot;data_cleaned/abortion_bans_final.csv&quot;) %&gt;% 
+  janitor::clean_names() 
+
+votingturnout_df = 
+  read.csv(&quot;data_cleaned/Voting Turnout - Final.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  filter(!row_number() %in% c(1))
+
+statedist_df = 
+  read.csv(&quot;data_cleaned/statedist_final.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(state_abv = origin_state)
+
+
+abortionvoting_df =
+  full_join(abortionbans_df, votingturnout_df, by = &quot;state_abv&quot;) %&gt;% 
+  select(-state.y) %&gt;% 
+  rename(state = state.x)
+
+abortionvoting_df =
+  full_join(abortionvoting_df, statedist_df, by = &quot;state_abv&quot;) %&gt;% 
+  rename(clinicdistance_jun = jun, clinicdistance_jul = jul)
+  
+write.csv(abortionvoting_df,&quot;data_cleaned/finalprojectfinaldataset.csv&quot;, row.names = FALSE)</code></pre>
+</div>
 </div>
 <div id="exploratory-analysis" class="section level2">
-<h2>Exploratory Analysis</h2>
+<h2><strong>Exploratory Analysis</strong></h2>
+<div id="voting-turnout-and-eligibility-graphs" class="section level3">
+<h3>Voting Turnout and Eligibility Graphs</h3>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = turnout_rate2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = turnout_rate2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Turnout Rate in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Rate Difference&quot;,
+    caption = &quot;Figure 1. Voting Turnout Rate in 2018 and 2022.&quot;)</code></pre>
+<p><img src="report_files/figure-html/figure%201-1.png" width="90%" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = turnout_estimate2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = turnout_estimate2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Turnout Estimate Number in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Rate Difference&quot;,
+    caption = &quot;Figure 2. Turnout Estimate Number in 2018 and 2022.&quot;)</code></pre>
+<p><img src="report_files/figure-html/figure%202-1.png" width="90%" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = voting_eligible_pop2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = voting_eligible_pop2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Eligibility Population in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Difference&quot;,
+    caption = &quot;Figure 3. Voting Eligibility Population in 2018 and 2022.&quot;)</code></pre>
+<p><img src="report_files/figure-html/figure%203-1.png" width="90%" /></p>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+    geom_point(aes(y = voting_age_pop2018, colour = &quot;2018&quot;)) +
+    geom_point(aes(y = voting_age_pop2022, colour = &quot;2022&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Voting Age Population in 2018 vs 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Difference&quot;,
+    caption = &quot;Figure 4. Voting Age Population in 2018 and 2022.&quot;)</code></pre>
+<p><img src="report_files/figure-html/figure%204-1.png" width="90%" /></p>
+</div>
+<div id="abortion-laws-and-accessibility-graphs" class="section level3">
+<h3>Abortion Laws and Accessibility Graphs</h3>
+<pre class="r"><code>abortionvoting_df %&gt;%
+  drop_na() %&gt;%
+  ggplot(aes(x = state_abv)) +
+  geom_point(aes(y = clinicdistance_jun, colour = &quot;June&quot;)) +
+  geom_point(aes(y = clinicdistance_jul, colour = &quot;July&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = &quot;Distance Changed from June to July, 2022&quot;,
+    x = &quot;State&quot;,
+    y = &quot;Distance&quot;,
+    caption = &quot;Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.&quot;)</code></pre>
+<p><img src="report_files/figure-html/figure%205-1.png" width="90%" /></p>
+<p><img src="images/abortion_status.JPG" style="width:75%"></p>
+</div>
 </div>
 <div id="discussion" class="section level2">
-<h2>Discussion</h2>
+<h2><strong>Discussion</strong></h2>
 </div>
 
 
