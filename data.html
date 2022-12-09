@@ -531,10 +531,15 @@ write_csv(abortion_bans, &quot;data_cleaned/abortion_bans_final.csv&quot;)</code
 </div>
 <div id="source-3-voter-turnout-data" class="section level2">
 <h2>Source 3: Voter Turnout Data</h2>
-<p>The voter turnout data was pulled from <a
-href="https://www.electproject.org/2022g">US Elections Project</a>. This
-source was created by a Professor in the Department of Political Science
-at the University of Florida.</p>
+<p>The voter turnout data for the 2018 and 2022 elections was pulled
+from <a href="https://www.electproject.org/">US Elections Project</a>.
+This source was created by a Professor in the Department of Political
+Science at the University of Florida. The 2022 election was the most
+recent election and the 2018 election was chosen as the comparison
+election because it was also a midterm election. The 2020 election was a
+Presidential election so we didn’t want to use that as a comparison for
+voter turnout because Presidential elections typically have higher
+turnout than midterm elections.</p>
 <pre class="r"><code>library(tidyverse)
 library(tidyr)
 library(readxl)

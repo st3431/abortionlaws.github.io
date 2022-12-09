@@ -129,7 +129,7 @@ write_csv(abortion_bans, "data_cleaned/abortion_bans_final.csv")
 
 ## Source 3: Voter Turnout Data 
 
-The voter turnout data was pulled from [US Elections Project](https://www.electproject.org/2022g). This source was created by a Professor in the Department of Political Science at the University of Florida.  
+The voter turnout data for the 2018 and 2022 elections was pulled from [US Elections Project](https://www.electproject.org/). This source was created by a Professor in the Department of Political Science at the University of Florida. The 2022 election was the most recent election and the 2018 election was chosen as the comparison election because it was also a midterm election. The 2020 election was a Presidential election so we didn't want to use that as a comparison for voter turnout because Presidential elections typically have higher turnout than midterm elections. 
 
 ```{r}
 library(tidyverse)

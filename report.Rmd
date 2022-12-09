@@ -13,7 +13,7 @@ library(tidyverse)
 library(rvest)
 library(readxl)
 library(here)
-library(ggpubr)
+#library(ggpubr)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -156,7 +156,7 @@ abortion_bans <-
 
 ### Voter Turnout By State:  [dataset](https://www.electproject.org/2022g)
 
-The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2022g). The data was downloaded as an xlsx file and read into R with a range restriction because the dataset had notes clarifying the data that were not useful to import into R. The names of variables of interest were renamed to `State`, `turnout_estimate2022`, `turnoutrate2022`, `voting_eligible_pop2022`, and `voting_age_pop2022` because the original names in the dataset had been confusing. Those four variables plus `state_abv` was selected out of the dataset. The other variables in the dataset involved data on the percent of people who were eligible to vote based on age, but were ineligible because of other factors which were not of interest to us so they were not kept in our final dataset.   
+The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2022g). The data was downloaded as an xlsx file and read into R with a range restriction because the dataset had notes clarifying the data that were not useful to import into R. The names of variables of interest were renamed to `State`, `turnout_estimate2022`, `turnoutrate2022`, `voting_eligible_pop2022`, and `voting_age_pop2022` to clarify what they were representing. Those four variables plus `state_abv` was selected out of the dataset. The other variables in the dataset involved data on the percent of people who were eligible to vote based on age, but were ineligible because of other factors which were not of interest to us so they were not kept in our final dataset.   
 
 The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2018g). This dataset was similar to the 2022 Vote Turnout dataset so an identical cleaning process was conducted. 
 
