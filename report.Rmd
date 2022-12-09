@@ -352,8 +352,45 @@ abortionvoting_df %>%
 <img src="images/abortion_status.jpg" style="width:75%">
 
 
+### Regression Analysis 
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+A variable, `ab_change` was created to quantify the change in abortion restriction status per state (`ab_change` = 1 if Roe v. Wade added an abortion restriction that was not previously in place; `ab_change` = 0 if the overturning of Roe v. Wade did not change abortion restrictions).  This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
+
+
+```{r clean}
+final_full = 
+  read_csv("data_cleaned/finalprojectfinaldataset.csv") %>%
+  mutate(
+    ab_change = abstatus22 - abstatus18
+  )
+```
+
+A regression model was created utilizing the following:
+
+* Outcome: The difference in percent turnout rate between 2018 and 2022 (`turnout_rate_difference`)
+* Predictor: The difference in abortion restriction status by state between 2018 and 2022 (`ab_change`)
+* Predictor: The average difference in closest abortion clinic by state between 2018 and 2022 (`dist_change`)
+
+```{r full_regress}
+regress_turnoutdif_full = 
+  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
+
+summary(regress_turnoutdif_full)
+confint(regress_turnoutdif_full)
+```
+
+Upon running the model, we find that the change in abortion status has a significant effect on voter turnout (P = 0.0261).  On average, a state that had an abortion restriction put in place after the overturning of Roe v. Wade had a 5.661% greater voter turnout in the 2022 election compared to the 2018 election.  We are 95% confident that the true increase in voter turnout falls between 0.703% and 10.619%.
+
+The average change in distance to abortion clinic was not significant.
+
 ## **Discussion**
 
 The first set of questions we were interested in answering focused on abortion laws and accessibility. Unfortunately, as expected, we did see an increase in the average distance to a safe abortion provider in states such as Alabama, Arkansas and Oklahoma. These are states that have already had strict laws regarding abortion prior to the overturn of Roe v. Wade. With the overturn, accessibility to safe abortions has only become more inaccessible especially in Texas. In figure 5 we can see that the average distance to an Abortion Clinic dramatically increases from an average of ~140 miles to ~ 300 miles. 
 
-When assessing the voter turnout data, it was surprising to see that in most states, voter turnout was either the same in 2018 and 2022 or there was a lower voter turnout in 2022. This was interesting to note as the eligible population (figure 3) stayed the same in most states, with 2022 actually having a higher eligible population in 2022.   
+When assessing the voter turnout data, it was surprising to see that in most states, voter turnout was either the same in 2018 and 2022 or there was a lower voter turnout in 2022. This was interesting to note as the eligible population (figure 3) stayed the same in most states, with 2022 actually having a higher eligible population in 2022. 
+
+When looking at the relationship between abortion laws and abortion clinic accessibility and voter turnout, we see that change in abortion restrictions from 2018 to 2022 had a significant impact on voter turnout from the 2018 to 2022 election. Further research may find other datasets which take into account other confounding variables which may also have increased voter turnout. From these analyses we can come to a reasonable conclusion that the overturn of Roe v Wade had some influence on voter turnout in the midterm elections of 2022. 
