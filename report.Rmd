@@ -13,7 +13,7 @@ library(tidyverse)
 library(rvest)
 library(readxl)
 library(here)
-library(ggpubr)
+#library(ggpubr)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -31,18 +31,28 @@ The motivation behind this project comes from the consistent political discourse
 
 ## **Initial Questions** 
 
-Based on the available data we were interested in answering the following questions: 
+From the available data we are interested in answering the following questions: 
 
-- How has voter turnout and eligibility changed by state between 2018 and 2022? 
-- Since the overturn of Roe v Wade how has accessibility to abortion clinics changed between June 2022 and July 2022? 
-- How do abortion laws and restrictions differ among each state? 
+1. Regarding abortion laws and accessibility
+    -  Since the overturn of Roe v Wade how has accessibility to          abortion clinics changed between June 2022 and July 2022?  
+    - How do abortion laws and restrictions differ among each state?  
+2. Regarding voter eligibility and turnout 
+    - How has the voting eligibility population changed from 2018 to        2022? 
+    - Was there any change in voter turnout rate from 2018 to 2022?
+    
+3. Regarding the relationship between abortion laws and voter         turnout
+    - What, if any, influence has abortion laws in 2022 had on            change in voter turnout from 2018 to 2022? 
+    - What, if any, influence has abortion provider accessibility         had on voter turnout rates from 2018 to 2022?
+
 
 ## **Data Processing and Cleaning**
 
 ### **Cleaning the data sets** 
 
 ### Abortion Clinic Distances By County and State: [dataset](https://osf.io/pfxq3/)
+The dataset from Myers Abortion Facility Database was downloaded and read in.  The dataset was filtered to only include distances from June 2022 and July 2022 to reflect the immediate change in average distance to abortion provider immediately before and after the overturning of Roe v. Wade.  Variables of interest, such as county, state, year, month, and distance to closest abortion clinic, were kept.  After converting numerical months to abbrevations, the dataset was pivoted to a wide format to create a variable for each months' distance.  The `dist_change` variable  was created taking the difference in average distance per county for the two months.
 
+After selecting variables for analysis and pivoting to wide format, the mean distance for each state was taken by averaging all counties by month and change in average distance.  These means were then merged by state to create one finalized distance dataset.
 ```{r, message = FALSE}
 clinicdist =
   read_csv("datasets/2022.10.01_abortionaccess_countyxmonth.csv")
@@ -146,7 +156,7 @@ abortion_bans <-
 
 ### Voter Turnout By State:  [dataset](https://www.electproject.org/2022g)
 
-The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2022g). The data was downloaded as an xlsx file and read into R with a range restriction because the dataset had notes clarifying the data that were not useful to import into R. The names of variables of interest were renamed to `State`, `turnout_estimate2022`, `turnoutrate2022`, `voting_eligible_pop2022`, and `voting_age_pop2022` because the original names in the dataset had been confusing. Those four variables plus `state_abv` was selected out of the dataset. The other variables in the dataset involved data on the percent of people who were eligible to vote based on age, but were ineligible because of other factors which were not of interest to us so they were not kept in our final dataset.   
+The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2022g). The data was downloaded as an xlsx file and read into R with a range restriction because the dataset had notes clarifying the data that were not useful to import into R. The names of variables of interest were renamed to `State`, `turnout_estimate2022`, `turnoutrate2022`, `voting_eligible_pop2022`, and `voting_age_pop2022` to clarify what they were representing. Those four variables plus `state_abv` was selected out of the dataset. The other variables in the dataset involved data on the percent of people who were eligible to vote based on age, but were ineligible because of other factors which were not of interest to us so they were not kept in our final dataset.   
 
 The 2022 Voter Turnout dataset was pulled from [US Elections Project](https://www.electproject.org/2018g). This dataset was similar to the 2022 Vote Turnout dataset so an identical cleaning process was conducted. 
 
@@ -303,7 +313,7 @@ abortionvoting_df %>%
   labs(
     title = "Voting Eligibility Population in 2018 vs 2022",
     x = "State",
-    y = "Difference",
+    y = "Population",
     caption = "Figure 3. Voting Eligibility Population in 2018 and 2022.")
 ```
 
@@ -332,9 +342,9 @@ abortionvoting_df %>%
   geom_point(aes(y = clinicdistance_jul, colour = "July")) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(
-    title = "Distance Changed from June to July, 2022",
+    title = "Distance to an Abortion Provider from June to July, 2022",
     x = "State",
-    y = "Distance",
+    y = "Distance (Miles)",
     caption = "Figure 5. Average Distance from an Abortion Clinic from June to July after Overturn of Roe vs. Wade.")
 ```
 
@@ -342,5 +352,45 @@ abortionvoting_df %>%
 <img src="images/abortion_status.jpg" style="width:75%">
 
 
+### Regression Analysis 
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+A variable, `ab_change` was created to quantify the change in abortion restriction status per state (`ab_change` = 1 if Roe v. Wade added an abortion restriction that was not previously in place; `ab_change` = 0 if the overturning of Roe v. Wade did not change abortion restrictions).  This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
+
+
+```{r clean}
+final_full = 
+  read_csv("data_cleaned/finalprojectfinaldataset.csv") %>%
+  mutate(
+    ab_change = abstatus22 - abstatus18
+  )
+```
+
+A regression model was created utilizing the following:
+
+* Outcome: The difference in percent turnout rate between 2018 and 2022 (`turnout_rate_difference`)
+* Predictor: The difference in abortion restriction status by state between 2018 and 2022 (`ab_change`)
+* Predictor: The average difference in closest abortion clinic by state between 2018 and 2022 (`dist_change`)
+
+```{r full_regress}
+regress_turnoutdif_full = 
+  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
+
+summary(regress_turnoutdif_full)
+confint(regress_turnoutdif_full)
+```
+
+Upon running the model, we find that the change in abortion status has a significant effect on voter turnout (P = 0.0261).  On average, a state that had an abortion restriction put in place after the overturning of Roe v. Wade had a 5.661% greater voter turnout in the 2022 election compared to the 2018 election.  We are 95% confident that the true increase in voter turnout falls between 0.703% and 10.619%.
+
+The average change in distance to abortion clinic was not significant.
+
 ## **Discussion**
 
+The first set of questions we were interested in answering focused on abortion laws and accessibility. Unfortunately, as expected, we did see an increase in the average distance to a safe abortion provider in states such as Alabama, Arkansas and Oklahoma. These are states that have already had strict laws regarding abortion prior to the overturn of Roe v. Wade. With the overturn, accessibility to safe abortions has only become more inaccessible especially in Texas. In figure 5 we can see that the average distance to an Abortion Clinic dramatically increases from an average of ~140 miles to ~ 300 miles. 
+
+When assessing the voter turnout data, it was surprising to see that in most states, voter turnout was either the same in 2018 and 2022 or there was a lower voter turnout in 2022. This was interesting to note as the eligible population (figure 3) stayed the same in most states, with 2022 actually having a higher eligible population in 2022. 
+
+When looking at the relationship between abortion laws and abortion clinic accessibility and voter turnout, we see that change in abortion restrictions from 2018 to 2022 had a significant impact on voter turnout from the 2018 to 2022 election. Further research may find other datasets which take into account other confounding variables which may also have increased voter turnout. From these analyses we can come to a reasonable conclusion that the overturn of Roe v Wade had some influence on voter turnout in the midterm elections of 2022. 

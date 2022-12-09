@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -228,6 +229,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -351,6 +355,9 @@ div.tocify {
 <li>
   <a href="report.html">Project Report</a>
 </li>
+<li>
+  <a href="about.html">About Us</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-github fa-lg"></span>
@@ -374,6 +381,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Statistical Analysis</h1>
@@ -381,7 +396,111 @@ div.tocify {
 </div>
 
 
+<p>For regression analysis, the merged data set was read and imported
+in. A variable, <code>ab_change</code> was created to quantify the
+change in abortion restriction status per state (<code>ab_change</code>
+= 1 if Roe v. Wade added an abortion restriction that was not previously
+in place; <code>ab_change</code> = 0 if the overturning of Roe v. Wade
+did not change abortion restrictions). This variable was created by
+taking the difference between abortion restriction status in 2022 and
+2018.</p>
+<pre class="r"><code>final_full = 
+  read_csv(&quot;data_cleaned/finalprojectfinaldataset.csv&quot;) %&gt;%
+  mutate(
+    ab_change = abstatus22 - abstatus18
+  )</code></pre>
+<pre><code>## Rows: 51 Columns: 19
+## ── Column specification ────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (2): state, state_abv
+## dbl (17): abstatus18, abstatus22, turnout_estimate2022, turnout_estimate2018...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>A regression model was created utilizing the following:</p>
+<ul>
+<li>Outcome: The difference in percent turnout rate between 2018 and
+2022 (<code>turnout_rate_difference</code>)</li>
+<li>Predictor: The difference in abortion restriction status by state
+between 2018 and 2022 (<code>ab_change</code>)</li>
+<li>Predictor: The average difference in closest abortion clinic by
+state between 2018 and 2022 (<code>dist_change</code>)</li>
+</ul>
+<pre class="r"><code>regress_turnoutdif_full = 
+  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
 
+summary(regress_turnoutdif_full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = turnout_rate_difference ~ ab_change + dist_change, 
+##     data = final_full)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.119850 -0.021474  0.007346  0.026012  0.075330 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -3.946e-02  6.420e-03  -6.146  1.5e-07 ***
+## ab_change    5.661e-02  2.466e-02   2.296   0.0261 *  
+## dist_change  8.557e-05  2.012e-04   0.425   0.6726    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.04124 on 48 degrees of freedom
+## Multiple R-squared:  0.09964,    Adjusted R-squared:  0.06212 
+## F-statistic: 2.656 on 2 and 48 DF,  p-value: 0.08054</code></pre>
+<pre class="r"><code>confint(regress_turnoutdif_full)</code></pre>
+<pre><code>##                     2.5 %        97.5 %
+## (Intercept) -0.0523651881 -0.0265484417
+## ab_change    0.0070331048  0.1061895577
+## dist_change -0.0003190211  0.0004901534</code></pre>
+<p>Upon running the model, we find that the change in abortion status
+has a significant effect on voter turnout (P = 0.0261). On average, a
+state that had an abortion restriction put in place after the
+overturning of Roe v. Wade had a 5.661% greater voter turnout in the
+2022 election compared to the 2018 election. We are 95% confident that
+the true increase in voter turnout falls between 0.703% and 10.619%.</p>
+<p>The average change in distance to abortion clinic was not
+significant.</p>
+<p>Running an F-test to determine whether the regression model with
+coefficients is better than an intercept-only model, we get a P-value of
+0.08054. This indicates that this model is not significantly better than
+the intercept-only model.</p>
+<pre class="r"><code>regress_turnoutdif_onlyab = 
+  lm(turnout_rate_difference ~ ab_change, data = final_full)
+
+summary(regress_turnoutdif_onlyab)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = turnout_rate_difference ~ ab_change, data = final_full)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.120873 -0.022101  0.006998  0.026681  0.074307 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.038433   0.005902  -6.512 3.78e-08 ***
+## ab_change    0.055588   0.024334   2.284   0.0267 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.04089 on 49 degrees of freedom
+## Multiple R-squared:  0.09625,    Adjusted R-squared:  0.0778 
+## F-statistic: 5.218 on 1 and 49 DF,  p-value: 0.02672</code></pre>
+<pre class="r"><code>confint(regress_turnoutdif_onlyab)</code></pre>
+<pre><code>##                    2.5 %      97.5 %
+## (Intercept) -0.050293799 -0.02657306
+## ab_change    0.006686395  0.10448950</code></pre>
+<p>In response to the insignificant F-test, it was decided to remove
+<code>dist_change</code> because it was an insignificant predictor. This
+leaves a univariate linear regression model, with the change in abortion
+restriction and model being significant (P-value = 0.0267). On average,
+a state that had an abortion restriction put in place after the
+overturning of Roe v. Wade had a 5.559% greater voter turnout in the
+2022 election compared to the 2018 election. We are 95% confident that
+the true increase in voter turnout falls between 0.669% and 10.449%.</p>
 
 
 
@@ -418,6 +537,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

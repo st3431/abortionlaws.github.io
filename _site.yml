@@ -13,6 +13,8 @@ navbar:
         href: visualization.html
     - text: "Project Report"
       href: report.html
+    - text: "About Us"
+      href: about.html 
     - icon: fa-github fa-lg
       menu: 
         - text: Data Cleaning Repository 

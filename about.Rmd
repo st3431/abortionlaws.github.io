@@ -1,0 +1,53 @@
+---
+title: "About Us"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    
+---
+
+## **Abby Feinberg** 
+
+[LinkedIn](https://www.linkedin.com/in/abby-feinberg-b64510160/)
+
+Abby is an MPH candidate in the Epidemiology Department with a certificate in Advanced Epidemiology. 
+
+
+
+## **Mohammad Fouda** 
+
+[LinkedIn](https://www.linkedin.com/in/mohammad-fouda-dvm-6b785b23/)
+
+Mohammad is an MPH candidate in the Epidemiology Department with a certificate in Infectious Disease Epidemiology. 
+
+
+## **Ellen Park** 
+
+[LinkedIn](https://www.linkedin.com/in/ellenspark/)
+
+Ellen is an MPH candidate in the Department of Environmental Health Sciences with a certificate in Biostatistcs.  
+
+
+## **Supraja Teki** 
+
+[LinkedIn](https://www.linkedin.com/in/supraja-teki-70680b196/)
+
+Supraja is an MPH candidate in the Department of Sociomedical Sciences with a certificate in Epidemiology of Chronic Disease. 
+
+
+## **Matt Untalan** 
+
+[LinkedIn](https://www.linkedin.com/in/matthewmayountalan/)
+
+Matt is an MPH candidate in the Biostatistics Department with a certificate in Advanced Epidemiology. 
+
+
+
+
+
+
+
+
+
+
