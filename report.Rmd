@@ -352,7 +352,7 @@ abortionvoting_df %>%
 <img src="images/abortion_status.jpg" style="width:75%">
 
 
-### Regression Analysis 
+## **Regression Analysis**
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -395,10 +395,10 @@ When assessing the voter turnout data, it was surprising to see that in most sta
 
 When looking at the relationship between abortion laws and abortion clinic accessibility and voter turnout, we see that change in abortion restrictions from 2018 to 2022 had a significant impact on voter turnout from the 2018 to 2022 election. Further research may find other datasets which take into account other confounding variables which may also have increased voter turnout. From these analyses we can come to a reasonable conclusion that the overturn of Roe v Wade had some influence on voter turnout in the midterm elections of 2022. 
 
-## Limitations 
 
-The abortion laws datasets had a lot of missing data for the years 2019-2021. So our anlaysis is limited to the years 2018 and 2022. This was not a major issue since we used voter turnout data on the same years for different reasons.Additionally, we decided not to use the data on threshold for abortion restrictions in our statistical analysis due to time restrictions and coding challenges though we used it to show spatial distribution of such thresholds. 
+## **Limitations** 
 
-Some states had not fully finished counting their votes by the time the 2022 voting data was compiled so these are preliminary numbers though they were close to full count. Based on that we don't expect a major change in our finding using the complete count data for the analysis. 
+The abortion laws datasets had a lot of missing data for the years 2019-2021 which limited our analysis to the years 2018 and 2022. This was not a major issue since we used voter turnout data on the same years for different reasons. Additionally, did not use the data on threshold for abortion restrictions (the week of gestation in which abortion is banned) in our models due to time restrictions and coding challenges. Some states had not fully finished counting their votes by the time the 2022 voting data was compiled so these are preliminary numbers though they were close to full count. Based on that we don't expect a major change in our finding using the complete count data for the analysis. 
 
-Our analysis did not examine data on issues that may confound the association between overturn of  Roe v Wade and voter turnout in the 2022 eections.
+Our models had other limitations. First, the predictor for abortion restrictions in 2022 only takes into account restrictions that had an immediate effect after the overturning of Roe v. Wade.  The predictor did not take into account any state laws that were pending, up for referendum, or to be put into effect months after the overturning.  Second, the models do not capture the nuances of abortion restrictions whether as as a result of excluding the restriction threshold or when abortion is allowed in cases of rape, incest, or harm to the mother's life.  Including these nuances would paint a more accurate picture of voter turnout based on each states' exact situation.  In connection to both these limitations, a more robust model could be created by utilizing a dataset with each states' type of abortion restrictions, as well as whether a referendum for abortion access was included on a state's ballot.  Further predictors could be added, such as state political leaning in last presidential election, religious ideology, and other proxies for abortion access other than distance to clinic.
+

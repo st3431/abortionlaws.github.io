@@ -1,5 +1,5 @@
 ---
-title: "About Us"
+title: "About the Team"
 output: 
   html_document:
     toc: true
@@ -9,38 +9,49 @@ output:
 
 ## **Abby Feinberg** 
 
+Abby is an MPH candidate in the Epidemiology Department with a certificate in Advanced Epidemiology.
+
 [LinkedIn](https://www.linkedin.com/in/abby-feinberg-b64510160/)
 
-Abby is an MPH candidate in the Epidemiology Department with a certificate in Advanced Epidemiology. 
-
-
+[Learn more about Abby](https://asf2164.github.io/abbyfeinberg.github.io/)
+ 
 
 ## **Mohammad Fouda** 
 
+Mohammad is an MPH candidate in the Epidemiology Department with a certificate in Infectious Disease Epidemiology.
+
 [LinkedIn](https://www.linkedin.com/in/mohammad-fouda-dvm-6b785b23/)
 
-Mohammad is an MPH candidate in the Epidemiology Department with a certificate in Infectious Disease Epidemiology. 
+[Learn more about Mohammad](https://mofouda.github.io/index.html)
+
 
 
 ## **Ellen Park** 
 
+Ellen is an MPH candidate in the Department of Environmental Health Sciences with a certificate in Biostatistcs. 
+
 [LinkedIn](https://www.linkedin.com/in/ellenspark/)
 
-Ellen is an MPH candidate in the Department of Environmental Health Sciences with a certificate in Biostatistcs.  
+[Learn more about Ellen](https://elnpark.github.io)
 
 
 ## **Supraja Teki** 
 
+Supraja is an MPH candidate in the Department of Sociomedical Sciences with a certificate in Epidemiology of Chronic Disease.
+
 [LinkedIn](https://www.linkedin.com/in/supraja-teki-70680b196/)
 
-Supraja is an MPH candidate in the Department of Sociomedical Sciences with a certificate in Epidemiology of Chronic Disease. 
-
+[Learn more about Supraja](https://st3431.github.io/suprajateki.github.io/) 
+ 
 
 ## **Matt Untalan** 
 
+Matt is an MPH candidate in the Biostatistics Department with a certificate in Advanced Epidemiology. 
+
 [LinkedIn](https://www.linkedin.com/in/matthewmayountalan/)
 
-Matt is an MPH candidate in the Biostatistics Department with a certificate in Advanced Epidemiology. 
+[Learn more about Matt](https://mattuntalan.github.io)
+
 
 
 
