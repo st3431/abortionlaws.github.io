@@ -348,7 +348,7 @@ div.tocify {
       <a href="analysis.html">Statistical Analysis</a>
     </li>
     <li>
-      <a href="visualization.html">Visualizations</a>
+      <a href="visualization.html">Exploratory Analysis</a>
     </li>
   </ul>
 </li>
@@ -409,14 +409,6 @@ taking the difference between abortion restriction status in 2022 and
   mutate(
     ab_change = abstatus22 - abstatus18
   )</code></pre>
-<pre><code>## Rows: 51 Columns: 19
-## ── Column specification ────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (2): state, state_abv
-## dbl (17): abstatus18, abstatus22, turnout_estimate2022, turnout_estimate2018...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>A regression model was created utilizing the following:</p>
 <ul>
 <li>Outcome: The difference in percent turnout rate between 2018 and
