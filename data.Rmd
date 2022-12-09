@@ -127,6 +127,14 @@ abortion_bans <-
 write_csv(abortion_bans, "data_cleaned/abortion_bans_final.csv")
 ```
 
+We also used the data on abortion laws by state from the [World Population Review](https://worldpopulationreview.com/state-rankings/abortion-laws-by-state). This dataset offers an overview of state abortion laws including laws that has not yet gone into effect and may need courts to determine hierarchy. Abortion laws status was coded as either `prohibited`, `Legal` or `Functional ban` depending on the state laws in place. The We plan to use this dataset to create a map. 
+
+```{r}
+state_bans <-
+  read_csv("datasets/state_abortion_laws2022.csv")
+```
+
+
 ## Source 3: Voter Turnout Data 
 
 The voter turnout data for the 2018 and 2022 elections was pulled from [US Elections Project](https://www.electproject.org/). This source was created by a Professor in the Department of Political Science at the University of Florida. The 2022 election was the most recent election and the 2018 election was chosen as the comparison election because it was also a midterm election. The 2020 election was a Presidential election so we didn't want to use that as a comparison for voter turnout because Presidential elections typically have higher turnout than midterm elections. 
