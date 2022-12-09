@@ -7,4 +7,47 @@ output:
     
 ---
 
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+For regression analysis, the merged data set was read and imported in.  A variable, `ab_change` was created to quantify the change in abortion restriction status per state (`ab_change` = 1 if Roe v. Wade added an abortion restriction that was not previously in place; `ab_change` = 0 if the overturning of Roe v. Wade did not change abortion restrictions).  This variable was created by taking the difference between abortion restriction status in 2022 and 2018.
+
+```{r clean}
+final_full = 
+  read_csv("data_cleaned/finalprojectfinaldataset.csv") %>%
+  mutate(
+    ab_change = abstatus22 - abstatus18
+  )
+```
+
+A regression model was created utilizing the following:
+
+* Outcome: The difference in percent turnout rate between 2018 and 2022 (`turnout_rate_difference`)
+* Predictor: The difference in abortion restriction status by state between 2018 and 2022 (`ab_change`)
+* Predictor: The average difference in closest abortion clinic by state between 2018 and 2022 (`dist_change`)
+
+```{r full_regress}
+regress_turnoutdif_full = 
+  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
+
+summary(regress_turnoutdif_full)
+confint(regress_turnoutdif_full)
+```
+
+Upon running the model, we find that the change in abortion status has a significant effect on voter turnout (P = 0.0261).  On average, a state that had an abortion restriction put in place after the overturning of Roe v. Wade had a 5.661% greater voter turnout in the 2022 election compared to the 2018 election.  We are 95% confident that the true increase in voter turnout falls between 0.703% and 10.619%.
+
+The average change in distance to abortion clinic was not significant.
+
+Running an F-test to determine whether the regression model with coefficients is better than an intercept-only model, we get a P-value of 0.08054.  This indicates that this model is not significantly better than the intercept-only model.
+
+```{r abonly_regress}
+regress_turnoutdif_onlyab = 
+  lm(turnout_rate_difference ~ ab_change, data = final_full)
+
+summary(regress_turnoutdif_onlyab)
+confint(regress_turnoutdif_onlyab)
+```
+
+In response to the insignificant F-test, it was decided to remove `dist_change` because it was an insignificant predictor.  This leaves a univariate linear regression model, with the change in abortion restriction and model being significant (P-value = 0.0267).  On average, a state that had an abortion restriction put in place after the overturning of Roe v. Wade had a 5.559% greater voter turnout in the 2022 election compared to the 2018 election.  We are 95% confident that the true increase in voter turnout falls between 0.669% and 10.449%.
 
