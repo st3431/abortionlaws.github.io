@@ -115,8 +115,7 @@ abortion_bans <-
   write_csv("data_cleaned/abortion_bans_final.csv")
 ```
 
-    ## Joining, by = c("state", "state_abv", "year",
-    ## "abstatus")
+    ## Joining, by = c("state", "state_abv", "year", "abstatus")
 
 ``` r
 abortion_bans

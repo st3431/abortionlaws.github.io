@@ -587,12 +587,12 @@ code .in { color: #008080; }
 </style>
 <style>
 body {
-  box-sizing: border-box;
-  min-width: 200px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 45px;
-  padding-top: 0px;
+box-sizing: border-box;
+min-width: 200px;
+max-width: 980px;
+margin: 0 auto;
+padding: 45px;
+padding-top: 0px;
 }
 </style>
 
@@ -699,8 +699,7 @@ and clinic abortion distances.</p>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> abstatus) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">abstatus18 =</span> <span class="st">&#39;2018&#39;</span>, <span class="at">abstatus22 =</span> <span class="st">&#39;2022&#39;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="st">&quot;data_cleaned/abortion_bans_final.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Joining, by = c(&quot;state&quot;, &quot;state_abv&quot;, &quot;year&quot;,
-## &quot;abstatus&quot;)</code></pre>
+<pre><code>## Joining, by = c(&quot;state&quot;, &quot;state_abv&quot;, &quot;year&quot;, &quot;abstatus&quot;)</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>abortion_bans</span></code></pre></div>
 <pre><code>## # A tibble: 51 × 4
 ##    state                state_abv abstatus18 abstatus22

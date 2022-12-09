@@ -38,6 +38,8 @@ A regression model was created utilizing the following:
 * Predictor: The difference in abortion restriction status by state between 2018 and 2022 (`ab_change`)
 * Predictor: The average difference in closest abortion clinic by state between 2018 and 2022 (`dist_change`)
 
+##  Regression Models
+
 ```{r full_regress}
 regress_turnoutdif_full = 
   lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full) 
@@ -104,6 +106,6 @@ check_model(regress_turnoutdif_full, check = c("linearity", "outliers", "qq", "n
 
 * Homoscedasticity: The top-left chart shows that the residuals are evenly disperesed around the reference line with the exception of one outlier. This indicates that the variance of our residuals should is constant across all fitted values. 
 
-* Preclusion of Outliers: All of the points in the top-right chart fall within the dashed curves, thus we can conclude that this assumption is satisfied.
+* Preclusion of Outliers: All of the points in the top-right chart fall within the dashed curves, thus we can conclude that this assumption is satisfied. 
 
 * Normality: The bottom-left plot for normality shows a linear trend, with the exception of 5 outliers. This confirms our earlier finding of linearity. In addition, the distribution of the residuals As we can see in the top-right chart closely follows a normal distribution centered at zero.

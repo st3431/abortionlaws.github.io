@@ -341,7 +341,7 @@ div.tocify {
       <a href="analysis.html">Statistical Analysis</a>
     </li>
     <li>
-      <a href="visualization.html">Visualizations</a>
+      <a href="visualization.html">Exploratory Analysis</a>
     </li>
   </ul>
 </li>
@@ -419,6 +419,8 @@ between 2018 and 2022 (<code>ab_change</code>)</li>
 <li>Predictor: The average difference in closest abortion clinic by
 state between 2018 and 2022 (<code>dist_change</code>)</li>
 </ul>
+<div id="regression-models" class="section level2">
+<h2>Regression Models</h2>
 <pre class="r"><code>regress_turnoutdif_full = 
   lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full) 
 
@@ -569,6 +571,7 @@ a state that had an abortion restriction put in place after the
 overturning of Roe v. Wade had a 5.559% greater voter turnout in the
 2022 election compared to the 2018 election. We are 95% confident that
 the true increase in voter turnout falls between 0.669% and 10.449%.</p>
+</div>
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
 <p>First, we examine the validity of our models for linearity assumption
