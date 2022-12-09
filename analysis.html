@@ -13,7 +13,7 @@
 
 <title>Statistical Analysis</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -410,7 +403,7 @@ taking the difference between abortion restriction status in 2022 and
     ab_change = abstatus22 - abstatus18
   )</code></pre>
 <pre><code>## Rows: 51 Columns: 19
-## ── Column specification ────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (2): state, state_abv
 ## dbl (17): abstatus18, abstatus22, turnout_estimate2022, turnout_estimate2018...
@@ -427,34 +420,70 @@ between 2018 and 2022 (<code>ab_change</code>)</li>
 state between 2018 and 2022 (<code>dist_change</code>)</li>
 </ul>
 <pre class="r"><code>regress_turnoutdif_full = 
-  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
+  lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full) 
 
-summary(regress_turnoutdif_full)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = turnout_rate_difference ~ ab_change + dist_change, 
-##     data = final_full)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.119850 -0.021474  0.007346  0.026012  0.075330 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -3.946e-02  6.420e-03  -6.146  1.5e-07 ***
-## ab_change    5.661e-02  2.466e-02   2.296   0.0261 *  
-## dist_change  8.557e-05  2.012e-04   0.425   0.6726    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.04124 on 48 degrees of freedom
-## Multiple R-squared:  0.09964,    Adjusted R-squared:  0.06212 
-## F-statistic: 2.656 on 2 and 48 DF,  p-value: 0.08054</code></pre>
-<pre class="r"><code>confint(regress_turnoutdif_full)</code></pre>
-<pre><code>##                     2.5 %        97.5 %
-## (Intercept) -0.0523651881 -0.0265484417
-## ab_change    0.0070331048  0.1061895577
-## dist_change -0.0003190211  0.0004901534</code></pre>
+summary(regress_turnoutdif_full) %&gt;% broom::tidy() %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.04</td>
+<td align="right">0.01</td>
+<td align="right">-6.15</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">ab_change</td>
+<td align="right">0.06</td>
+<td align="right">0.02</td>
+<td align="right">2.30</td>
+<td align="right">0.03</td>
+</tr>
+<tr class="odd">
+<td align="left">dist_change</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.43</td>
+<td align="right">0.67</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>confint(regress_turnoutdif_full) %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">2.5 %</th>
+<th align="right">97.5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.05</td>
+<td align="right">-0.03</td>
+</tr>
+<tr class="even">
+<td align="left">ab_change</td>
+<td align="right">0.01</td>
+<td align="right">0.11</td>
+</tr>
+<tr class="odd">
+<td align="left">dist_change</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+</tbody>
+</table>
 <p>Upon running the model, we find that the change in abortion status
 has a significant effect on voter turnout (P = 0.0261). On average, a
 state that had an abortion restriction put in place after the
@@ -470,29 +499,68 @@ the intercept-only model.</p>
 <pre class="r"><code>regress_turnoutdif_onlyab = 
   lm(turnout_rate_difference ~ ab_change, data = final_full)
 
-summary(regress_turnoutdif_onlyab)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = turnout_rate_difference ~ ab_change, data = final_full)
-## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.120873 -0.022101  0.006998  0.026681  0.074307 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.038433   0.005902  -6.512 3.78e-08 ***
-## ab_change    0.055588   0.024334   2.284   0.0267 *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.04089 on 49 degrees of freedom
-## Multiple R-squared:  0.09625,    Adjusted R-squared:  0.0778 
-## F-statistic: 5.218 on 1 and 49 DF,  p-value: 0.02672</code></pre>
-<pre class="r"><code>confint(regress_turnoutdif_onlyab)</code></pre>
-<pre><code>##                    2.5 %      97.5 %
-## (Intercept) -0.050293799 -0.02657306
-## ab_change    0.006686395  0.10448950</code></pre>
+summary(regress_turnoutdif_full) %&gt;% broom::tidy() %&gt;%  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.04</td>
+<td align="right">0.01</td>
+<td align="right">-6.15</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">ab_change</td>
+<td align="right">0.06</td>
+<td align="right">0.02</td>
+<td align="right">2.30</td>
+<td align="right">0.03</td>
+</tr>
+<tr class="odd">
+<td align="left">dist_change</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.43</td>
+<td align="right">0.67</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>confint(regress_turnoutdif_full) %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">2.5 %</th>
+<th align="right">97.5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.05</td>
+<td align="right">-0.03</td>
+</tr>
+<tr class="even">
+<td align="left">ab_change</td>
+<td align="right">0.01</td>
+<td align="right">0.11</td>
+</tr>
+<tr class="odd">
+<td align="left">dist_change</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+</tbody>
+</table>
 <p>In response to the insignificant F-test, it was decided to remove
 <code>dist_change</code> because it was an insignificant predictor. This
 leaves a univariate linear regression model, with the change in abortion
@@ -501,6 +569,61 @@ a state that had an abortion restriction put in place after the
 overturning of Roe v. Wade had a 5.559% greater voter turnout in the
 2022 election compared to the 2018 election. We are 95% confident that
 the true increase in voter turnout falls between 0.669% and 10.449%.</p>
+<div id="diagnostics" class="section level2">
+<h2>Diagnostics</h2>
+<p>First, we examine the validity of our models for linearity assumption
+by plotting fitted values against residuals.</p>
+<pre class="r"><code>turnoutdif_full_plot &lt;- 
+  final_full %&gt;% 
+  modelr::add_residuals(regress_turnoutdif_full) %&gt;% 
+  ggplot(aes(x = turnout_rate_difference, y = resid)) +
+  geom_point() +
+  labs(
+        title = &quot;Multivariate Linear Model&quot;,
+        x = &quot;Voter Turn Out Difference&quot;,
+        y = &quot;Residuals&quot;) 
+
+turnoutdif_onlyab_plot &lt;- 
+  final_full %&gt;% 
+  modelr::add_residuals(regress_turnoutdif_onlyab) %&gt;% 
+  ggplot(aes(x = turnout_rate_difference, y = resid)) +
+  geom_point() +
+  labs(
+        title = &quot;Univariate Linear Model&quot;,
+        x = &quot;Voter Turn Out Difference&quot;,
+        y = &quot;Residuals&quot;) 
+
+
+(turnoutdif_full_plot + turnoutdif_onlyab_plot)</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The plots show a strong linear trend with the exception of 4 outliers
+in the multivariate model and 3 in the univariate model. This confirms
+that linear regression is most appropriate for our analysis</p>
+<p>Next we examine the validity of our models and assess its goodness of
+fit. Here. we performed this step on the multivariate model only since
+both models show a linear trend above.</p>
+<pre class="r"><code>check_model(regress_turnoutdif_full, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li><p>Linearity: As we can see in the top-left chart, the residuals
+have mean zero and are uncorrelated with the fitted values.
+Additionally, the best fit line of the residuals regressed on the fitted
+values has an intercept and slope of zero. This indicte that our model
+is properly specified.</p></li>
+<li><p>Homoscedasticity: The top-left chart shows that the residuals are
+evenly disperesed around the reference line with the exception of one
+outlier. This indicates that the variance of our residuals should is
+constant across all fitted values.</p></li>
+<li><p>Preclusion of Outliers: All of the points in the top-right chart
+fall within the dashed curves, thus we can conclude that this assumption
+is satisfied.</p></li>
+<li><p>Normality: The bottom-left plot for normality shows a linear
+trend, with the exception of 5 outliers. This confirms our earlier
+finding of linearity. In addition, the distribution of the residuals As
+we can see in the top-right chart closely follows a normal distribution
+centered at zero.</p></li>
+</ul>
+</div>
 
 
 

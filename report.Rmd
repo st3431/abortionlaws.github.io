@@ -379,7 +379,7 @@ A regression model was created utilizing the following:
 regress_turnoutdif_full = 
   lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
 
-summary(regress_turnoutdif_full)
+summary(regress_turnoutdif_full) 
 confint(regress_turnoutdif_full)
 ```
 
@@ -394,3 +394,11 @@ The first set of questions we were interested in answering focused on abortion l
 When assessing the voter turnout data, it was surprising to see that in most states, voter turnout was either the same in 2018 and 2022 or there was a lower voter turnout in 2022. This was interesting to note as the eligible population (figure 3) stayed the same in most states, with 2022 actually having a higher eligible population in 2022. 
 
 When looking at the relationship between abortion laws and abortion clinic accessibility and voter turnout, we see that change in abortion restrictions from 2018 to 2022 had a significant impact on voter turnout from the 2018 to 2022 election. Further research may find other datasets which take into account other confounding variables which may also have increased voter turnout. From these analyses we can come to a reasonable conclusion that the overturn of Roe v Wade had some influence on voter turnout in the midterm elections of 2022. 
+
+## Limitations 
+
+The abortion laws datasets had a lot of missing data for the years 2019-2021. So our anlaysis is limited to the years 2018 and 2022. This was not a major issue since we used voter turnout data on the same years for different reasons.Additionally, we decided not to use the data on threshold for abortion restrictions in our statistical analysis due to time restrictions and coding challenges though we used it to show spatial distribution of such thresholds. 
+
+Some states had not fully finished counting their votes by the time the 2022 voting data was compiled so these are preliminary numbers though they were close to full count. Based on that we don't expect a major change in our finding using the complete count data for the analysis. 
+
+Our analysis did not examine data on issues that may confound the association between overturn of  Roe v Wade and voter turnout in the 2022 eections.

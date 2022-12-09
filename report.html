@@ -13,7 +13,7 @@
 
 <title>Final Report</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -768,7 +761,7 @@ state between 2018 and 2022 (<code>dist_change</code>)</li>
 <pre class="r"><code>regress_turnoutdif_full = 
   lm(turnout_rate_difference ~ ab_change + dist_change, data = final_full)
 
-summary(regress_turnoutdif_full)
+summary(regress_turnoutdif_full) 
 confint(regress_turnoutdif_full)</code></pre>
 <p>Upon running the model, we find that the change in abortion status
 has a significant effect on voter turnout (P = 0.0261). On average, a
@@ -804,6 +797,24 @@ which take into account other confounding variables which may also have
 increased voter turnout. From these analyses we can come to a reasonable
 conclusion that the overturn of Roe v Wade had some influence on voter
 turnout in the midterm elections of 2022.</p>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
+<p>The abortion laws datasets had a lot of missing data for the years
+2019-2021. So our anlaysis is limited to the years 2018 and 2022. This
+was not a major issue since we used voter turnout data on the same years
+for different reasons.Additionally, we decided not to use the data on
+threshold for abortion restrictions in our statistical analysis due to
+time restrictions and coding challenges though we used it to show
+spatial distribution of such thresholds.</p>
+<p>Some states had not fully finished counting their votes by the time
+the 2022 voting data was compiled so these are preliminary numbers
+though they were close to full count. Based on that we don’t expect a
+major change in our finding using the complete count data for the
+analysis.</p>
+<p>Our analysis did not examine data on issues that may confound the
+association between overturn of Roe v Wade and voter turnout in the 2022
+eections.</p>
 </div>
 
 

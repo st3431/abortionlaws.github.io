@@ -13,7 +13,7 @@
 
 <title>Data Sources</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -468,9 +461,9 @@ are also using data on abortion laws restriction status by state after
 Roe v. Wade was overturned. This data that include updates through
 November 2022 comes from the non-profit Lucy Burns Institute <a
 href="https://ballotpedia.org/Abortion_regulations_by_state">Ballotpedia</a>.
-The data set was not available to download so we able to scrape it from
-the website. A <code>year</code> and <code>state_abv</code> variables
-were created, and Washington DC was renamed to
+The data set was not available to download but we were able to scrape it
+from the website. A <code>year</code> and <code>state_abv</code>
+variables were created, and Washington DC was renamed to
 <code>District of Columbia</code>.</p>
 <pre class="r"><code>bans2018 &lt;-
   read_excel(&quot;datasets/abortion_bans_data_Oct 2021.xlsx&quot;, sheet = &quot;Statistical Data&quot;, range = &quot;A1:H127&quot;) %&gt;% 
@@ -528,6 +521,16 @@ restricted, 0 = not restricted)</li>
   rename(abstatus18 = &#39;2018&#39;, abstatus22 = &#39;2022&#39;) 
 
 write_csv(abortion_bans, &quot;data_cleaned/abortion_bans_final.csv&quot;)</code></pre>
+<p>We also used the data on abortion laws by state from the <a
+href="https://worldpopulationreview.com/state-rankings/abortion-laws-by-state">World
+Population Review</a>. This dataset offers an overview of state abortion
+laws including laws that has not yet gone into effect and may need
+courts to determine hierarchy. Abortion laws status was coded as either
+<code>prohibited</code>, <code>Legal</code> or
+<code>Functional ban</code> depending on the state laws in place. The We
+plan to use this dataset to create a map.</p>
+<pre class="r"><code>state_bans &lt;-
+  read_csv(&quot;datasets/state_abortion_laws2022.csv&quot;)</code></pre>
 </div>
 <div id="source-3-voter-turnout-data" class="section level2">
 <h2>Source 3: Voter Turnout Data</h2>
