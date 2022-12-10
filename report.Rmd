@@ -50,7 +50,7 @@ From the available data we are interested in answering the following questions:
 ### **Cleaning the data sets** 
 
 ### Abortion Clinic Distances By County and State: [dataset](https://osf.io/pfxq3/)
-The dataset from Myers Abortion Facility Database was downloaded and read in.  The dataset was filtered to only include distances from June 2022 and July 2022 to reflect the immediate change in average distance to abortion provider immediately before and after the overturning of Roe v. Wade.  Variables of interest, such as county, state, year, month, and distance to closest abortion clinic, were kept.  After converting numerical months to abbrevations, the dataset was pivoted to a wide format to create a variable for each months' distance.  The `dist_change` variable  was created taking the difference in average distance per county for the two months.
+The dataset from Myers Abortion Facility Database was downloaded and read in.  The dataset was filtered to only include distances from June 2022 and July 2022 to reflect the immediate change in average distance to abortion provider immediately before and after the overturning of Roe v. Wade.  Variables of interest, such as county, state, year, month, and distance to closest abortion clinic, were kept.  After converting numerical months to abbreviations, the dataset was pivoted to a wide format to create a variable for each months' distance.  The `dist_change` variable  was created taking the difference in average distance per county for the two months.
 
 After selecting variables for analysis and pivoting to wide format, the mean distance for each state was taken by averaging all counties by month and change in average distance.  These means were then merged by state to create one finalized distance dataset.
 ```{r, message = FALSE}
@@ -92,7 +92,7 @@ write.csv(statedist,"data_cleaned/statedist_final.csv", row.names = FALSE)
 
 *Abortion restrictions data* 
 
-First, we read in the data on abortion laws restriction status by state 2018 found [here](https://lawatlas.org/datasets/abortion-bans). The `bans2018` data set is then cleaned and tidied to prepare for merging with other data sets. Note that states that had no abortion restrictions in 2018 were intentionally coded as `.` by the original coder. These were replaced with `0` to reflect their status for further data analysis. A `year` and `state_abv` variables were created, and Washington DC was renamed to District of Columbia. Next, we read in the 2022 data on abortion restrictions by state found [here](https://ballotpedia.org/Abortion_regulations_by_state). Though this data set was not available to download, we were able to scrape it from the source webpage. A `year` and `state_abv` variables were added to the `bans2022` data set, and `Washington DC` was renamed `District of Columbia` to match the 2018 data set. 
+First, we read in the data on abortion laws restriction status by state 2018 found [here](https://lawatlas.org/datasets/abortion-bans). The `bans2018` dataset is then cleaned and tidied to prepare for merging with other datasets. Note that states that had no abortion restrictions in 2018 were intentionally coded as `.` by the original coder. These were replaced with `0` to reflect their status for further data analysis. A `year` and `state_abv` variables were created, and Washington DC was renamed to District of Columbia. Next, we read in the 2022 data on abortion restrictions by state found [here](https://ballotpedia.org/Abortion_regulations_by_state). Though this dataset was not available to download, we were able to scrape it from the source webpage. A `year` and `state_abv` variables were added to the `bans2022` data set, and `Washington DC` was renamed `District of Columbia` to match the 2018 dataset. 
 
 
 ```{r}
@@ -133,7 +133,7 @@ bans2022 <-
   arrange(state) 
 ```
 
-Finally, we merge 2018-2021 and 2022 data sets together. The resulting data set is saved as a CSV file to merge with data sets on voter turnout and clinic abortion distances. The new data set include 4 variables, some of which are listed below:
+Finally, we merge 2018-2021 and 2022 datasets together. The resulting dataset is saved as a CSV file to merge with data sets on voter turnout and clinic abortion distances. The new data set include 4 variables, some of which are listed below:
 
 * `state`: State name
 * `abstatus18`: Abortion restriction status in 2018 ( 1 = restricted, 0 = not restricted)
@@ -257,11 +257,8 @@ write.csv(abortionvoting_df,"data_cleaned/finalprojectfinaldataset.csv", row.nam
 ```
 
 
+
 ```{r, echo = FALSE, message= FALSE}
-
-```
-
-```{r, echo = FALSE}
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
@@ -400,5 +397,5 @@ When looking at the relationship between abortion laws and abortion clinic acces
 
 The abortion laws datasets had a lot of missing data for the years 2019-2021 which limited our analysis to the years 2018 and 2022. This was not a major issue since we used voter turnout data on the same years for different reasons. Additionally, did not use the data on threshold for abortion restrictions (the week of gestation in which abortion is banned) in our models due to time restrictions and coding challenges. Some states had not fully finished counting their votes by the time the 2022 voting data was compiled so these are preliminary numbers though they were close to full count. Based on that we don't expect a major change in our finding using the complete count data for the analysis. 
 
-Our models had other limitations. First, the predictor for abortion restrictions in 2022 only takes into account restrictions that had an immediate effect after the overturning of Roe v. Wade.  The predictor did not take into account any state laws that were pending, up for referendum, or to be put into effect months after the overturning.  Second, the models do not capture the nuances of abortion restrictions whether as as a result of excluding the restriction threshold or when abortion is allowed in cases of rape, incest, or harm to the mother's life.  Including these nuances would paint a more accurate picture of voter turnout based on each states' exact situation.  In connection to both these limitations, a more robust model could be created by utilizing a dataset with each states' type of abortion restrictions, as well as whether a referendum for abortion access was included on a state's ballot.  Further predictors could be added, such as state political leaning in last presidential election, religious ideology, and other proxies for abortion access other than distance to clinic.
+Our models had other limitations. First, the predictor for abortion restrictions in 2022 only takes into account restrictions that had an immediate effect after the overturning of Roe v. Wade.  The predictor did not take into account any state laws that were pending, up for referendum, or to be put into effect months after the overturning.  Second, the models do not capture the nuances of abortion restrictions whether as a result of excluding the restriction threshold from the data or when abortion is allowed in cases of rape, incest, or harm to the mother's life.  Including these nuances would paint a more accurate picture of voter turnout based on each states' exact situation.  In connection to both these limitations, a more robust model could be created by utilizing a dataset with each states' type of abortion restrictions, as well as whether a referendum for abortion access was included on a state's ballot.  Further predictors could be added, such as state political leaning in last presidential election, religious ideology, and other proxies for abortion access other than distance to clinic.
 
