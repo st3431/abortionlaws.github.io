@@ -7,6 +7,18 @@ output:
     
 ---
 
+```{r include=FALSE, message=FALSE, warning=FALSE}
+
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message=FALSE,
+	warning = FALSE,
+	results = FALSE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%")
+```
+
 **Exploring how abortion laws and abortion facility access have impacted voter turnout over time in the United States** 
 
 
@@ -21,9 +33,9 @@ On June 24, 2022 the U.S. Supreme Court overturned the constitutional right to a
 
 ## Screencast 
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=mTFF_cI-OzI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mTFF_cI-OzI" frameborder="0" allowfullscreen></iframe>
 
-## Overview 
+
 
 **The website covers the following**:  
 
