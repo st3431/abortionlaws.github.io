@@ -67,7 +67,7 @@ In response to the insignificant F-test, it was decided to remove `dist_change` 
 
 ## Diagnostics
 
-First, we examine the validity of our models for linearinsity assumption by plotting fitted values against residuals. 
+First, we examine the validity of our models for linearity assumption by plotting fitted values against residuals. 
 
 ```{r}
 turnoutdif_full_plot <- 
