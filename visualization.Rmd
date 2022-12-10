@@ -140,14 +140,17 @@ Figure 5 portrays the average distance from an abortion clinic in June and in Ju
 
 <img src="images/abortion_threshold.png" style="width:75%">
 
+
 This figure from the Balletopedia dataset depicts state abortion restrictions based on the stage of pregnancy as of November 25, 2022. 44 states restricted abortions after a certain point in pregnancy, and 6 states including Washington D.C. did not implement any abortion restrictions. There are different thresholds on when abortion is restricted in the 44 states.
 
 The definitions of the thresholds are explained below:
-Conception prohibits all abortions, but abortion may be considered if the patient's life is at risk.
-Fetal heartbeat prohibits abortions after a fetal heartbeat can be determined; this may begin as soon as 6 weeks after the last menstrual period.
-Fetal viability prohibits abortions and is interpreted by the Supreme Court at about 24-28 weeks into pregnancy.
-Last menstrual period prohibits abortions and marks the beginning of a pregnancy from the first day of a woman's last menstrual period.
-Post-fertilization prohibits abortions at the beginning of conception, which can be up to 24 hours following intercourse.
-Post implantation prohibits abortions and takes place when an egg attaches to the uterus; this is roughly five days after the egg is fertilized.
 
-Source: Balletopedia.org
+* Conception: prohibits all abortions, but abortion may be considered if the patient's life is at risk.
+* Fetal heartbeat: prohibits abortions after a fetal heartbeat can be detected; this may begin as soon as 6 weeks after the last menstrual period.
+Fetal viability: prohibits abortions and is interpreted by the Supreme Court at about 24-28 weeks into pregnancy.
+* Last menstrual period: marks the beginning of a pregnancy from the first day of a woman's last menstrual period (LMP).
+* Post-fertilization: marks the beginning of conception, which can be up to 24 hours following intercourse.
+* Post-implantation: marks the beginning of pregnancy and takes place when an egg attaches to the uterus; this is roughly five days after the egg is fertilized.
+
+<font size="1">Source: [Balletopedia.org](https://ballotpedia.org/Abortion_regulations_by_state)</font> 
+
